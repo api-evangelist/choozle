@@ -1,0 +1,91 @@
+{
+  "title": "Choozle API Vocabulary",
+  "description": "Key terms and concepts used in the Choozle Reporting API and platform.",
+  "terms": [
+    {
+      "term": "account_id",
+      "definition": "Unique numeric identifier for a Choozle advertising account. Required parameter for report queries.",
+      "type": "parameter"
+    },
+    {
+      "term": "ad_group_id",
+      "definition": "Unique numeric identifier for an ad group within a campaign. Optional filter parameter for report queries.",
+      "type": "parameter"
+    },
+    {
+      "term": "token",
+      "definition": "HMAC-SHA256-based authorization token obtained from the /api/authorization endpoint, valid for 2 hours. Passed as a request header in all authenticated API calls.",
+      "type": "authentication"
+    },
+    {
+      "term": "signature",
+      "definition": "HMAC-SHA256 hex-encoded digest of the concatenated email and timestamp, signed with the user's API secret key. Required for token generation.",
+      "type": "authentication"
+    },
+    {
+      "term": "impressions",
+      "definition": "The total number of times an advertisement was displayed to a user during the reporting period.",
+      "type": "metric"
+    },
+    {
+      "term": "clicks",
+      "definition": "The total number of times users clicked on an advertisement during the reporting period.",
+      "type": "metric"
+    },
+    {
+      "term": "spend",
+      "definition": "Total amount spent in USD on advertising for the reported account and date range.",
+      "type": "metric"
+    },
+    {
+      "term": "conversions",
+      "definition": "The number of attributed conversion events (e.g., purchases, sign-ups) resulting from advertising during the reporting period.",
+      "type": "metric"
+    },
+    {
+      "term": "ctr",
+      "definition": "Click-Through Rate — the ratio of clicks to impressions, expressed as a decimal (clicks / impressions).",
+      "type": "metric"
+    },
+    {
+      "term": "cpc",
+      "definition": "Cost Per Click — the average cost in USD for each click received on an advertisement.",
+      "type": "metric"
+    },
+    {
+      "term": "cpm",
+      "definition": "Cost Per Mille — the cost in USD per one thousand ad impressions.",
+      "type": "metric"
+    },
+    {
+      "term": "DSP",
+      "definition": "Demand-Side Platform — a system that allows buyers of digital advertising inventory to manage multiple ad exchange and data exchange accounts through one interface. Choozle is a self-service DSP.",
+      "type": "concept"
+    },
+    {
+      "term": "CTV",
+      "definition": "Connected TV — television content delivered over the internet via smart TVs or streaming devices. Choozle supports CTV advertising channels.",
+      "type": "channel"
+    },
+    {
+      "term": "DOOH",
+      "definition": "Digital Out-of-Home — digital advertising displayed in public environments such as digital billboards and transit displays. Choozle supports DOOH advertising.",
+      "type": "channel"
+    },
+    {
+      "term": "RTB",
+      "definition": "Real-Time Bidding — an automated auction process for buying and selling digital advertising impressions in milliseconds as a webpage loads.",
+      "type": "concept"
+    },
+    {
+      "term": "date_start",
+      "definition": "The start date (inclusive) of the reporting window in YYYY-MM-DD format.",
+      "type": "parameter"
+    },
+    {
+      "term": "date_end",
+      "definition": "The end date (inclusive) of the reporting window in YYYY-MM-DD format.",
+      "type": "parameter"
+    }
+  ]
+}

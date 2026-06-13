@@ -1,0 +1,43 @@
+{
+  "provider": "choozle",
+  "blogURL": "https://choozle.com/blog/",
+  "fetched": "2026-06-13",
+  "posts": [
+    {
+      "title": "5 Surprising Lessons from Our New Amazon DSP Integration",
+      "url": "https://choozle.com/blog/5-surprising-lessons-from-our-new-amazon-dsp-integration/",
+      "date": "2026-05-24",
+      "description": "The operational lessons shaping the next era of programmatic advertising."
+    },
+    {
+      "title": "Radical Transparency: The Control Layer Defining Advertising",
+      "url": "https://choozle.com/blog/radical-transparency-the-control-layer-defining-advertising/",
+      "date": "2026-05-04",
+      "description": "The System Behind Advertiser Control — part of a five-part blog series."
+    },
+    {
+      "title": "The Master Producer Bet: Why Automation Alone Won't Win",
+      "url": "https://choozle.com/blog/the-master-producer-bet-why-automation-alone-wont-win/",
+      "date": "2026-04-26",
+      "description": "Part of the Power to the Advertiser series exploring why automation requires human expertise."
+    },
+    {
+      "title": "Why Your \"Addressable Market\" is Costing You Money",
+      "url": "https://choozle.com/blog/why-your-addressable-market-is-costing-you-money/",
+      "date": "2026-04-08",
+      "description": "Examines the hidden cost of scale and why precision is becoming the new growth strategy."
+    },
+    {
+      "title": "Power to the Advertiser Starts With Trust",
+      "url": "https://choozle.com/blog/power-to-the-advertiser-starts-with-trust/",
+      "date": "2026-04-01",
+      "description": "A Foundation Built on the Advertiser — discussing Choozle's advertiser-focused approach."
+    },
+    {
+      "title": "Stop the Invisible Leak: Reclaim Your Ad Spend",
+      "url": "https://choozle.com/blog/stop-the-invisible-leak-reclaim-your-ad-spend/",
+      "date": "2026-03-24",
+      "description": "Addresses performance loss beyond strategic issues in advertising campaigns."
+    }
+  ]
+}

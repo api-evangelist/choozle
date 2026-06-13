@@ -1,0 +1,26 @@
+{
+  "description": "Example: Retrieve campaign performance report for an account and date range",
+  "request": {
+    "method": "GET",
+    "url": "https://app.choozle.com/api/reports?account_id=8737&date_start=2023-01-16&date_end=2023-02-16",
+    "headers": {
+      "token": "2fb94ad2e255b2d3961f5178ccf5ac105825156c2c84ac2bff48bd49b4ef69b7"
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": [
+      {
+        "account_id": 8737,
+        "date": "2023-01-16",
+        "impressions": 100000,
+        "clicks": 850,
+        "spend": 1250.75,
+        "conversions": 42,
+        "ctr": 0.0085,
+        "cpc": 1.47,
+        "cpm": 12.51
+      }
+    ]
+  }
+}

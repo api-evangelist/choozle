@@ -1,0 +1,21 @@
+{
+  "description": "Example: Obtain an authorization token via HMAC-SHA256 signed POST request",
+  "request": {
+    "method": "POST",
+    "url": "https://app.choozle.com/api/authorization",
+    "headers": {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    "body": {
+      "email": "user@example.com",
+      "timestamp": 1674000000,
+      "signature": "a3f2c1d4e5b6789012345678abcdef0123456789abcdef0123456789abcdef01"
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": {
+      "token": "2fb94ad2e255b2d3961f5178ccf5ac105825156c2c84ac2bff48bd49b4ef69b7"
+    }
+  }
+}

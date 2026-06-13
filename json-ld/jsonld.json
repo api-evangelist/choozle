@@ -1,0 +1,69 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "choozle": "https://choozle.com/vocab#",
+    "aid": "choozle:aid",
+    "baseURL": "choozle:baseURL",
+    "humanURL": "choozle:humanURL"
+  },
+  "@type": "WebAPI",
+  "@id": "https://raw.githubusercontent.com/api-evangelist/choozle/main/apis.yml",
+  "name": "Choozle Reporting API",
+  "description": "REST API for accessing campaign performance data, account information, and advertising metrics across all channels managed within the Choozle platform.",
+  "url": "https://help.choozle.com/connecting-to-choozles-reporting-api",
+  "provider": {
+    "@type": "Organization",
+    "name": "Choozle",
+    "url": "https://choozle.com/",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "url": "https://help.choozle.com/",
+      "contactType": "customer support"
+    }
+  },
+  "termsOfService": "https://choozle.com/terms-of-service/",
+  "documentation": "https://help.choozle.com/connecting-to-choozles-reporting-api",
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Choozle Platform",
+    "url": "https://choozle.com/the-platform/"
+  },
+  "serviceType": [
+    "Digital Advertising",
+    "Programmatic Advertising",
+    "Demand-Side Platform",
+    "Campaign Management",
+    "Reporting API"
+  ],
+  "availableChannel": [
+    "Display",
+    "Connected TV",
+    "Video",
+    "Audio",
+    "Native",
+    "Digital Out-of-Home",
+    "Search",
+    "Social"
+  ],
+  "endpointURL": "https://app.choozle.com/api",
+  "potentialAction": [
+    {
+      "@type": "Action",
+      "name": "Authenticate",
+      "description": "Obtain an authorization token using HMAC-SHA256 signed credentials.",
+      "target": "https://app.choozle.com/api/authorization"
+    },
+    {
+      "@type": "Action",
+      "name": "List Accounts",
+      "description": "Retrieve all advertising accounts accessible to the authenticated user.",
+      "target": "https://app.choozle.com/api/accounts"
+    },
+    {
+      "@type": "Action",
+      "name": "Get Reports",
+      "description": "Retrieve campaign performance metrics for a specific account and date range.",
+      "target": "https://app.choozle.com/api/reports"
+    }
+  ]
+}

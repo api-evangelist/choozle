@@ -1,0 +1,23 @@
+{
+  "description": "Example: List all advertising accounts accessible to the authenticated user",
+  "request": {
+    "method": "GET",
+    "url": "https://app.choozle.com/api/accounts",
+    "headers": {
+      "token": "2fb94ad2e255b2d3961f5178ccf5ac105825156c2c84ac2bff48bd49b4ef69b7"
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": [
+      {
+        "id": 8737,
+        "name": "Acme Corp Account"
+      },
+      {
+        "id": 9102,
+        "name": "Demo Advertiser Account"
+      }
+    ]
+  }
+}
