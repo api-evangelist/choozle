@@ -1,7 +1,7 @@
 {
   "provider": "choozle",
   "blogURL": "https://choozle.com/blog/",
-  "fetched": "2026-06-13",
+  "fetched": "2026-06-14T20:42:17Z",
   "posts": [
     {
       "title": "5 Surprising Lessons from Our New Amazon DSP Integration",
@@ -13,7 +13,7 @@
       "title": "Radical Transparency: The Control Layer Defining Advertising",
       "url": "https://choozle.com/blog/radical-transparency-the-control-layer-defining-advertising/",
       "date": "2026-05-04",
-      "description": "The System Behind Advertiser Control — part of a five-part blog series."
+      "description": "The System Behind Advertiser Control \u2014 part of a five-part blog series."
     },
     {
       "title": "The Master Producer Bet: Why Automation Alone Won't Win",
@@ -31,7 +31,7 @@
       "title": "Power to the Advertiser Starts With Trust",
       "url": "https://choozle.com/blog/power-to-the-advertiser-starts-with-trust/",
       "date": "2026-04-01",
-      "description": "A Foundation Built on the Advertiser — discussing Choozle's advertiser-focused approach."
+      "description": "A Foundation Built on the Advertiser \u2014 discussing Choozle's advertiser-focused approach."
     },
     {
       "title": "Stop the Invisible Leak: Reclaim Your Ad Spend",
@@ -39,5 +39,16 @@
       "date": "2026-03-24",
       "description": "Addresses performance loss beyond strategic issues in advertising campaigns."
     }
-  ]
+  ],
+  "repo": "choozle",
+  "feeds": [
+    {
+      "source": "https://help.choozle.com/",
+      "feed_url": "https://help.choozle.com/",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0
 }
