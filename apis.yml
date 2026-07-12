@@ -46,6 +46,10 @@ apis:
         url: https://help.choozle.com/
         email: ''
 common:
+  - type: DomainSecurity
+    url: security/choozle-domain-security.yml
+  - type: Authentication
+    url: authentication/choozle-authentication.yml
   - type: Plans
     url: https://raw.githubusercontent.com/api-evangelist/choozle/refs/heads/main/plans/plans.md
   - type: RateLimits

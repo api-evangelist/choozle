@@ -1,0 +1,17 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/openapi.yml
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: tokenHeader
+  type: apiKey
+  in: header
+  parameter: token
+  description: API token obtained from the /authorization endpoint. Valid for 2 hours. Pass
+    the token value as the `token` request header.
+  sources:
+  - openapi/openapi.yml
