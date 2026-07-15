@@ -46,6 +46,8 @@ apis:
         url: https://help.choozle.com/
         email: ''
 common:
+  - type: AgenticAccess
+    url: agentic-access/choozle-agentic-access.yml
   - type: DomainSecurity
     url: security/choozle-domain-security.yml
   - type: Authentication
