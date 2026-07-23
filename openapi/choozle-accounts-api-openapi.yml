@@ -1,0 +1,74 @@
+openapi: 3.0.3
+info:
+  title: Choozle Reporting Accounts API
+  description: 'REST API for accessing campaign performance data, account information, and advertising metrics across all channels managed within the Choozle platform. Supports programmatic retrieval of spend, impressions, clicks, conversions, and other KPIs by account, date range, and ad group.
+
+    '
+  version: '1.0'
+  contact:
+    name: Choozle Support
+    url: https://help.choozle.com/
+  termsOfService: https://choozle.com/terms-of-service/
+servers:
+- url: https://app.choozle.com/api
+  description: Choozle production API
+security:
+- tokenHeader: []
+tags:
+- name: Accounts
+paths:
+  /accounts:
+    get:
+      operationId: listAccounts
+      summary: List accessible advertising accounts
+      description: Returns a list of Choozle advertising accounts accessible to the authenticated user.
+      responses:
+        '200':
+          description: A list of account objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        '401':
+          description: Missing or invalid authorization token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Accounts
+components:
+  schemas:
+    Error:
+      type: object
+      description: API error response.
+      properties:
+        error:
+          type: string
+          description: Human-readable error message.
+          example: Unauthorized
+    Account:
+      type: object
+      description: A Choozle advertising account.
+      properties:
+        id:
+          type: integer
+          description: Unique numeric account identifier.
+          example: 8737
+        name:
+          type: string
+          description: Human-readable account name.
+          example: Acme Corp Account
+  securitySchemes:
+    tokenHeader:
+      type: apiKey
+      in: header
+      name: token
+      description: 'API token obtained from the /authorization endpoint. Valid for 2 hours. Pass the token value as the `token` request header.
+
+        '
+externalDocs:
+  description: Choozle Reporting API Documentation
+  url: https://help.choozle.com/connecting-to-choozles-reporting-api

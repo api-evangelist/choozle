@@ -1,0 +1,97 @@
+openapi: 3.0.3
+info:
+  title: Choozle Reporting Accounts Authorization API
+  description: 'REST API for accessing campaign performance data, account information, and advertising metrics across all channels managed within the Choozle platform. Supports programmatic retrieval of spend, impressions, clicks, conversions, and other KPIs by account, date range, and ad group.
+
+    '
+  version: '1.0'
+  contact:
+    name: Choozle Support
+    url: https://help.choozle.com/
+  termsOfService: https://choozle.com/terms-of-service/
+servers:
+- url: https://app.choozle.com/api
+  description: Choozle production API
+security:
+- tokenHeader: []
+tags:
+- name: Authorization
+paths:
+  /authorization:
+    post:
+      operationId: getAuthorizationToken
+      summary: Obtain an API authorization token
+      description: 'Authenticates a user and returns a time-limited token for use in subsequent API requests. The token is valid for 2 hours. The request body must include a HMAC-SHA256 signature (hex format) computed over the email and timestamp using the user''s API secret key.
+
+        '
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - email
+              - timestamp
+              - signature
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: The registered Choozle account email address.
+                  example: user@example.com
+                timestamp:
+                  type: integer
+                  description: Unix epoch timestamp (seconds) used in signature computation.
+                  example: 1674000000
+                signature:
+                  type: string
+                  description: HMAC-SHA256 hex digest of the email and timestamp using the API secret key.
+                  example: a3f2c1d4e5b6789012345678abcdef0123456789abcdef0123456789abcdef01
+      responses:
+        '200':
+          description: Successful authentication; returns a bearer token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorizationToken'
+              example:
+                token: 2fb94ad2e255b2d3961f5178ccf5ac105825156c2c84ac2bff48bd49b4ef69b7
+        '401':
+          description: Authentication failed due to invalid credentials or signature.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Authorization
+components:
+  schemas:
+    Error:
+      type: object
+      description: API error response.
+      properties:
+        error:
+          type: string
+          description: Human-readable error message.
+          example: Unauthorized
+    AuthorizationToken:
+      type: object
+      description: Authorization token returned after successful authentication.
+      properties:
+        token:
+          type: string
+          description: Bearer token string to use in subsequent API calls.
+          example: 2fb94ad2e255b2d3961f5178ccf5ac105825156c2c84ac2bff48bd49b4ef69b7
+  securitySchemes:
+    tokenHeader:
+      type: apiKey
+      in: header
+      name: token
+      description: 'API token obtained from the /authorization endpoint. Valid for 2 hours. Pass the token value as the `token` request header.
+
+        '
+externalDocs:
+  description: Choozle Reporting API Documentation
+  url: https://help.choozle.com/connecting-to-choozles-reporting-api

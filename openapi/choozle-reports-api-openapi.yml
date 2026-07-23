@@ -1,0 +1,150 @@
+openapi: 3.0.3
+info:
+  title: Choozle Reporting Accounts Reports API
+  description: 'REST API for accessing campaign performance data, account information, and advertising metrics across all channels managed within the Choozle platform. Supports programmatic retrieval of spend, impressions, clicks, conversions, and other KPIs by account, date range, and ad group.
+
+    '
+  version: '1.0'
+  contact:
+    name: Choozle Support
+    url: https://help.choozle.com/
+  termsOfService: https://choozle.com/terms-of-service/
+servers:
+- url: https://app.choozle.com/api
+  description: Choozle production API
+security:
+- tokenHeader: []
+tags:
+- name: Reports
+paths:
+  /reports:
+    get:
+      operationId: getReports
+      summary: Retrieve campaign performance reports
+      description: 'Returns campaign performance metrics for the specified account and date range. Optionally filter results by ad group. Metrics include spend, impressions, clicks, conversions, and other KPIs.
+
+        '
+      parameters:
+      - name: account_id
+        in: query
+        required: true
+        description: The numeric identifier of the account to report on.
+        schema:
+          type: integer
+          example: 8737
+      - name: date_start
+        in: query
+        required: true
+        description: Start date of the reporting period in YYYY-MM-DD format.
+        schema:
+          type: string
+          format: date
+          example: '2023-01-16'
+      - name: date_end
+        in: query
+        required: true
+        description: End date of the reporting period in YYYY-MM-DD format.
+        schema:
+          type: string
+          format: date
+          example: '2023-02-16'
+      - name: ad_group_id
+        in: query
+        required: false
+        description: Optional numeric identifier for a specific ad group to filter results.
+        schema:
+          type: integer
+          example: 12345
+      responses:
+        '200':
+          description: Performance report data for the requested account and date range.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReportRow'
+        '400':
+          description: Bad request — missing or invalid query parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Missing or invalid authorization token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Reports
+components:
+  schemas:
+    ReportRow:
+      type: object
+      description: A single row of campaign performance data.
+      properties:
+        account_id:
+          type: integer
+          description: Account identifier.
+          example: 8737
+        ad_group_id:
+          type: integer
+          description: Ad group identifier (if filtered).
+          example: 12345
+        date:
+          type: string
+          format: date
+          description: Date of the reported metrics.
+          example: '2023-01-16'
+        impressions:
+          type: integer
+          description: Number of ad impressions served.
+          example: 100000
+        clicks:
+          type: integer
+          description: Number of clicks recorded.
+          example: 850
+        spend:
+          type: number
+          format: float
+          description: Total spend in USD for the period.
+          example: 1250.75
+        conversions:
+          type: integer
+          description: Number of attributed conversions.
+          example: 42
+        ctr:
+          type: number
+          format: float
+          description: Click-through rate (clicks / impressions).
+          example: 0.0085
+        cpc:
+          type: number
+          format: float
+          description: Cost per click in USD.
+          example: 1.47
+        cpm:
+          type: number
+          format: float
+          description: Cost per thousand impressions in USD.
+          example: 12.51
+    Error:
+      type: object
+      description: API error response.
+      properties:
+        error:
+          type: string
+          description: Human-readable error message.
+          example: Unauthorized
+  securitySchemes:
+    tokenHeader:
+      type: apiKey
+      in: header
+      name: token
+      description: 'API token obtained from the /authorization endpoint. Valid for 2 hours. Pass the token value as the `token` request header.
+
+        '
+externalDocs:
+  description: Choozle Reporting API Documentation
+  url: https://help.choozle.com/connecting-to-choozles-reporting-api
