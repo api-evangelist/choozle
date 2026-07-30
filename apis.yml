@@ -1,7 +1,19 @@
 aid: choozle
 name: Choozle
 description: Choozle is a self-service digital advertising platform providing REST APIs for managing programmatic campaigns, audience segments, creative assets, publisher deals, and performance reporting across Display, CTV, Video, Audio, Native, DOOH, Search, and Social channels.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/choozle.png
 url: https://raw.githubusercontent.com/api-evangelist/choozle/refs/heads/main/apis.yml
 created: '2026-06-13'
 modified: '2026-06-13'
@@ -23,28 +35,48 @@ tags:
   - Real-Time Bidding
   - RTB
 apis:
-  - aid: choozle:choozle-reporting-api
-    name: Choozle Reporting API
-    description: REST API for accessing campaign performance data, account information, and advertising metrics across all channels managed within the Choozle platform. Supports programmatic retrieval of spend, impressions, clicks, conversions, and other KPIs by account, date range, and ad group.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://help.choozle.com/connecting-to-choozles-reporting-api
-    baseURL: https://app.choozle.com/api
-    tags:
-      - Reporting
-      - Campaign Analytics
-      - Performance Metrics
-      - Advertising
-    properties:
-      - type: Documentation
-        url: https://help.choozle.com/connecting-to-choozles-reporting-api
-      - type: OpenAPI
-        url: https://app.choozle.com/apidoc/
-      - type: Authentication
-        url: https://help.choozle.com/connecting-to-choozles-reporting-api
-    contact:
-      - FN: Choozle Support
-        url: https://help.choozle.com/
-        email: ''
+- aid: choozle:choozle-accounts-api
+  name: Choozle Accounts API
+  description: The Accounts API from Choozle — 1 operation(s) for accounts.
+  humanURL: https://help.choozle.com/connecting-to-choozles-reporting-api
+  baseURL: https://app.choozle.com/api
+  tags:
+  - Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/choozle-accounts-api-openapi.yml
+  - type: Documentation
+    url: https://help.choozle.com/connecting-to-choozles-reporting-api
+  - type: Authentication
+    url: https://help.choozle.com/connecting-to-choozles-reporting-api
+- aid: choozle:choozle-authorization-api
+  name: Choozle Authorization API
+  description: The Authorization API from Choozle — 1 operation(s) for authorization.
+  humanURL: https://help.choozle.com/connecting-to-choozles-reporting-api
+  baseURL: https://app.choozle.com/api
+  tags:
+  - Authorization
+  properties:
+  - type: OpenAPI
+    url: openapi/choozle-authorization-api-openapi.yml
+  - type: Documentation
+    url: https://help.choozle.com/connecting-to-choozles-reporting-api
+  - type: Authentication
+    url: https://help.choozle.com/connecting-to-choozles-reporting-api
+- aid: choozle:choozle-reports-api
+  name: Choozle Reports API
+  description: The Reports API from Choozle — 1 operation(s) for reports.
+  humanURL: https://help.choozle.com/connecting-to-choozles-reporting-api
+  baseURL: https://app.choozle.com/api
+  tags:
+  - Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/choozle-reports-api-openapi.yml
+  - type: Documentation
+    url: https://help.choozle.com/connecting-to-choozles-reporting-api
+  - type: Authentication
+    url: https://help.choozle.com/connecting-to-choozles-reporting-api
 common:
   - type: AgenticAccess
     url: agentic-access/choozle-agentic-access.yml
