@@ -1,0 +1,18 @@
+{
+  "provider": "choozle",
+  "sources": [
+    "choozle-accounts-api-openapi.yml",
+    "choozle-authorization-api-openapi.yml",
+    "choozle-reports-api-openapi.yml"
+  ],
+  "outputs": [
+    "choozle-accounts-api-openapi.yml",
+    "choozle-authorization-api-openapi.yml",
+    "choozle-reports-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
