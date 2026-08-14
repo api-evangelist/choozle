@@ -1,30 +1,47 @@
 aid: choozle
 name: Choozle
-description: Choozle is a self-service digital advertising platform providing REST APIs for managing programmatic campaigns, audience segments, creative assets, publisher deals, and performance reporting across Display, CTV, Video, Audio, Native, DOOH, Search, and Social channels.
+description: >-
+  Choozle is a Denver-based self-service demand-side platform (DSP) for
+  programmatic digital advertising across Display, Connected TV, Video, Audio,
+  Native, DOOH, Search and Social, with buying routed through The Trade Desk and
+  Amazon DSP. Its public developer surface is a single read-only product, the
+  Choozle Outbound Reporting API: three operations that exchange an HMAC-SHA256
+  signature for a two-hour token, return the account/campaign/ad group tree, and
+  return daily per-ad-group performance rows. Campaign, audience, creative and
+  deal management are performed in the web application only — no public API
+  writes to them. Keys are issued by support ticket rather than self-service.
 accessModel:
-  pricing: unknown
-  onboarding: self-serve
+  pricing: sales-led
+  onboarding: sales-led
   trial: false
   try_now: false
   public: false
-  label: Self-serve signup
-  confidence: medium
+  label: Customer-only API, keys issued by support ticket
+  confidence: high
   source:
   - authentication
-  generated: '2026-07-22'
-  method: derived
+  - plans
+  - probe
+  note: >-
+    https://app.choozle.com/users/register returns 404 — there is no public
+    self-serve registration. An API secret key is generated when an ORG or
+    advertiser admin creates an API profile and is released only via a Customer
+    Portal ticket. Published commercial terms are minimum media spends, not a
+    subscription price list.
+  generated: '2026-08-13'
+  method: probed
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/choozle.png
 url: https://raw.githubusercontent.com/api-evangelist/choozle/refs/heads/main/apis.yml
 created: '2026-06-13'
-modified: '2026-06-13'
+modified: '2026-08-13'
 specificationVersion: '0.19'
 tags:
   - Digital Advertising
   - Programmatic Advertising
   - DSP
   - Demand-Side Platform
-  - Campaign Management
-  - Audience Targeting
+  - Advertising Reporting
+  - Campaign Reporting
   - Display Advertising
   - Connected TV
   - CTV
@@ -34,72 +51,160 @@ tags:
   - Reporting
   - Real-Time Bidding
   - RTB
+  - AdTech
 apis:
 - aid: choozle:choozle-accounts-api
   name: Choozle Accounts API
-  description: The Accounts API from Choozle — 1 operation(s) for accounts.
-  humanURL: https://help.choozle.com/connecting-to-choozles-reporting-api
+  description: >-
+    Returns the advertising account structure the API user can reach — accounts,
+    their campaigns, and each campaign's ad groups — in one unpaginated
+    document. One operation, read-only.
+  humanURL: https://app.choozle.com/apidoc/
   baseURL: https://app.choozle.com/api
   tags:
   - Accounts
   properties:
   - type: OpenAPI
     url: openapi/choozle-accounts-api-openapi.yml
+  - type: Overlay
+    url: overlays/choozle-accounts-api-overlay.yaml
+  - type: APIReference
+    url: https://app.choozle.com/apidoc/
   - type: Documentation
     url: https://help.choozle.com/connecting-to-choozles-reporting-api
   - type: Authentication
-    url: https://help.choozle.com/connecting-to-choozles-reporting-api
+    url: authentication/choozle-authentication.yml
+  - type: Examples
+    name: List accounts
+    url: examples/list-accounts.json
 - aid: choozle:choozle-authorization-api
   name: Choozle Authorization API
-  description: The Authorization API from Choozle — 1 operation(s) for authorization.
-  humanURL: https://help.choozle.com/connecting-to-choozles-reporting-api
+  description: >-
+    The token exchange. POST an API profile email, an ISO 8601 timestamp within
+    five minutes of server time, and an HMAC-SHA256 hex signature to receive a
+    token valid two hours. One operation, the API's only write.
+  humanURL: https://app.choozle.com/apidoc/
   baseURL: https://app.choozle.com/api
   tags:
   - Authorization
   properties:
   - type: OpenAPI
     url: openapi/choozle-authorization-api-openapi.yml
+  - type: Overlay
+    url: overlays/choozle-authorization-api-overlay.yaml
+  - type: APIReference
+    url: https://app.choozle.com/apidoc/
   - type: Documentation
     url: https://help.choozle.com/connecting-to-choozles-reporting-api
   - type: Authentication
-    url: https://help.choozle.com/connecting-to-choozles-reporting-api
+    url: authentication/choozle-authentication.yml
+  - type: JSONSchema
+    name: AuthorizationRequest
+    url: json-schema/authorization-request.json
+  - type: Examples
+    name: Get token
+    url: examples/get-token.json
 - aid: choozle:choozle-reports-api
   name: Choozle Reports API
-  description: The Reports API from Choozle — 1 operation(s) for reports.
-  humanURL: https://help.choozle.com/connecting-to-choozles-reporting-api
+  description: >-
+    Returns one performance row per active ad group per day for an account,
+    optionally filtered by date range and by exactly one of campaign, campaign
+    status, or ad group ids. Rows are omitted for days with no activity. One
+    operation, read-only.
+  humanURL: https://app.choozle.com/apidoc/
   baseURL: https://app.choozle.com/api
   tags:
   - Reports
   properties:
   - type: OpenAPI
     url: openapi/choozle-reports-api-openapi.yml
+  - type: Overlay
+    url: overlays/choozle-reports-api-overlay.yaml
+  - type: APIReference
+    url: https://app.choozle.com/apidoc/
   - type: Documentation
     url: https://help.choozle.com/connecting-to-choozles-reporting-api
   - type: Authentication
-    url: https://help.choozle.com/connecting-to-choozles-reporting-api
+    url: authentication/choozle-authentication.yml
+  - type: JSONSchema
+    name: ReportRow
+    url: json-schema/report-row.json
+  - type: Examples
+    name: Get reports
+    url: examples/get-reports.json
 common:
+  - type: OpenAPI
+    name: Choozle Outbound Reporting API (full)
+    url: openapi/_original/openapi.yml
   - type: AgenticAccess
     url: agentic-access/choozle-agentic-access.yml
   - type: DomainSecurity
     url: security/choozle-domain-security.yml
   - type: Authentication
     url: authentication/choozle-authentication.yml
+  - type: Conventions
+    url: conventions/choozle-conventions.yml
+  - type: ErrorCatalog
+    url: errors/choozle-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/choozle-lifecycle.yml
+  - type: Conformance
+    url: conformance/choozle-conformance.yml
+  - type: Compliance
+    url: https://choozle.com/data-processing-agreement/
+  - type: DataModel
+    url: data-model/choozle-data-model.yml
+  - type: Packages
+    url: packages/choozle-packages.yml
+  - type: LLMsTxt
+    url: llms/choozle-llms.txt
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: Vocabulary
+    url: vocabulary/vocabulary.json
+  - type: JSONLD
+    url: json-ld/jsonld.json
+  - type: Rules
+    url: rules/choozle-jsonschema-spectral-rules.yml
   - type: Plans
-    url: https://raw.githubusercontent.com/api-evangelist/choozle/refs/heads/main/plans/plans.md
+    url: plans/choozle-plans-pricing.yml
   - type: RateLimits
-    url: https://raw.githubusercontent.com/api-evangelist/choozle/refs/heads/main/rate-limits/rate-limits.md
+    url: rate-limits/choozle-rate-limits.yml
   - type: FinOps
     url: https://raw.githubusercontent.com/api-evangelist/choozle/refs/heads/main/finops/finops.md
   - type: Website
     url: https://choozle.com/
   - type: Documentation
     url: https://help.choozle.com/
+  - type: APIReference
+    url: https://app.choozle.com/apidoc/
+  - type: GettingStarted
+    url: https://help.choozle.com/connecting-to-choozles-reporting-api
+  - type: Support
+    url: https://help.choozle.com/
+  - type: GitHubOrganization
+    url: https://github.com/choozle
   - type: Blog
     url: https://choozle.com/blog/
+  - type: BlogRSS
+    url: https://choozle.com/feed/
+  - type: Pricing
+    url: https://choozle.com/managed-self-service/
+  - type: Login
+    url: https://app.choozle.com/users/login
   - type: TermsOfService
     url: https://choozle.com/terms-of-service/
+  - type: PrivacyPolicy
+    url: https://choozle.com/privacy-policy/
   - type: Platform
     url: https://choozle.com/the-platform/
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 19
+  pass: local-v1
+x-coverage:
+  state: covered
