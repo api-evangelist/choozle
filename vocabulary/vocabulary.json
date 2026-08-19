@@ -1,40 +1,30 @@
 {
   "title": "Choozle API Vocabulary",
-  "description": "Key terms and concepts used in the Choozle Reporting API and platform.",
+  "description": "Key terms and concepts used in the Choozle Reporting API and platform. Field and enum definitions are transcribed from Choozle's published apiDoc dataset at https://app.choozle.com/apidoc/api_data.json.",
   "terms": [
     {
       "term": "account_id",
-      "definition": "Unique numeric identifier for a Choozle advertising account. Required parameter for report queries.",
+      "definition": "Identifier for a Choozle advertising account. Required query parameter on GET /api/reports.",
       "type": "parameter"
     },
     {
       "term": "ad_group_id",
-      "definition": "Unique numeric identifier for an ad group within a campaign. Optional filter parameter for report queries.",
+      "definition": "Identifier for an ad group within a campaign. Optional filter on GET /api/reports; accepts one or more comma-separated ids and cannot be combined with campaign_id or campaign_status.",
       "type": "parameter"
     },
     {
       "term": "token",
-      "definition": "HMAC-SHA256-based authorization token obtained from the /api/authorization endpoint, valid for 2 hours. Passed as a request header in all authenticated API calls.",
+      "definition": "Authentication token obtained from POST /api/auth, valid for 2 hours from creation. Passed as the `token` request header on every reporting call.",
       "type": "authentication"
     },
     {
       "term": "signature",
-      "definition": "HMAC-SHA256 hex-encoded digest of the concatenated email and timestamp, signed with the user's API secret key. Required for token generation.",
+      "definition": "HMAC-SHA256 digest, in lowercase hex, of the concatenated email and timestamp, keyed with the account's API private key. Required for token generation; uppercase hex and base64 are rejected.",
       "type": "authentication"
-    },
-    {
-      "term": "impressions",
-      "definition": "The total number of times an advertisement was displayed to a user during the reporting period.",
-      "type": "metric"
     },
     {
       "term": "clicks",
       "definition": "The total number of times users clicked on an advertisement during the reporting period.",
-      "type": "metric"
-    },
-    {
-      "term": "spend",
-      "definition": "Total amount spent in USD on advertising for the reported account and date range.",
       "type": "metric"
     },
     {
@@ -79,13 +69,70 @@
     },
     {
       "term": "date_start",
-      "definition": "The start date (inclusive) of the reporting window in YYYY-MM-DD format.",
+      "definition": "Beginning of the reporting date range (inclusive), ISO 8601 date. Optional; used alone it returns reports on and after this date.",
       "type": "parameter"
     },
     {
       "term": "date_end",
-      "definition": "The end date (inclusive) of the reporting window in YYYY-MM-DD format.",
+      "definition": "End of the reporting date range (inclusive), ISO 8601 date. Optional; used alone it returns reports on and before this date.",
       "type": "parameter"
+    },
+    {
+      "term": "campaign_id",
+      "definition": "Identifier for a campaign within an account. Optional filter on GET /api/reports; cannot be combined with campaign_status.",
+      "type": "parameter"
+    },
+    {
+      "term": "campaign_status",
+      "definition": "Campaign status filter on GET /api/reports. One of all, active, inactive, archived. Cannot be combined with campaign_id.",
+      "type": "parameter"
+    },
+    {
+      "term": "timestamp",
+      "definition": "Current datetime in ISO 8601 format used in the auth signature. Must be within five minutes of the Choozle server's current time.",
+      "type": "parameter"
+    },
+    {
+      "term": "account_state",
+      "definition": "Account lifecycle enum returned by GET /api/accounts. A: Active; I: Inactive, error with account; C: Cancelled; P: Paused.",
+      "type": "enum"
+    },
+    {
+      "term": "status",
+      "definition": "Ad group status enum returned by GET /api/accounts. I: Incomplete; U: Unapproved; E: Enabled; D: Disabled; S: Scheduled; W: Error; O: Over Ad Group's Budget; B: Over Ad Group's Daily Budget; C: Campaign Over Budget; A: Campaign Over Daily Budget.",
+      "type": "enum"
+    },
+    {
+      "term": "advertiser_cost",
+      "definition": "Cost charged to the advertiser for the reported ad group and day.",
+      "type": "metric"
+    },
+    {
+      "term": "impressions_won",
+      "definition": "Number of impressions won in auction for the reported ad group and day.",
+      "type": "metric"
+    },
+    {
+      "term": "impressions_bid_on",
+      "definition": "Number of impressions bid on for the reported ad group and day.",
+      "type": "metric"
+    },
+    {
+      "term": "win",
+      "definition": "Auction win rate for the reported ad group and day.",
+      "type": "metric"
+    },
+    {
+      "term": "cpa",
+      "definition": "Cost Per Acquisition — the average cost for each attributed conversion.",
+      "type": "metric"
+    },
+    {
+      "term": "archived",
+      "definition": "Campaign archive flag returned by GET /api/accounts. Y when archived, N otherwise.",
+      "type": "enum"
     }
-  ]
+  ],
+  "source": "https://app.choozle.com/apidoc/api_data.json",
+  "generated": "2026-08-13"
 }

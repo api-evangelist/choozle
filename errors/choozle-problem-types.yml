@@ -1,0 +1,86 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/_original/openapi.yml
+enriched_from:
+  - https://app.choozle.com/apidoc/api_data.json
+  - https://help.choozle.com/connecting-to-choozles-reporting-api
+  - live unauthenticated probes of https://app.choozle.com/api/* on 2026-08-13
+format: custom-json
+rfc9457: false
+envelope:
+  content_type: application/json; charset=UTF-8
+  shape: '{"error": "<string>"}'
+  fields:
+    - name: error
+      type: string
+      description: Human-readable message. Untyped — there is no stable machine code.
+  note: >-
+    Choozle returns a bare JSON object with one `error` string. There is no
+    problem type URI, no error code, no instance identifier and no pointer to
+    the offending parameter, so clients must branch on HTTP status plus
+    substring matching on the message. This is the whole error contract.
+problems:
+  - status: 401
+    title: Request incomplete
+    detail: >-
+      The token exchange is missing one or more of email, timestamp or
+      signature, or the submitted values did not verify.
+    body: '{"error": "Request incomplete"}'
+    source_operation: openapi/choozle-authorization-api-openapi.yml#getAuthorizationToken
+    evidence: observed on a live POST to https://app.choozle.com/api/auth with an empty body, 2026-08-13
+    remediation: >-
+      Send email, timestamp and signature in the request BODY with
+      Content-Type: application/x-www-form-urlencoded. The signature must be the
+      HMAC-SHA256 digest of email concatenated with timestamp, keyed on the API
+      private key, in LOWERCASE HEX — uppercase hex and base64 both fail here.
+      The timestamp must be ISO 8601 and within five minutes of server time, so
+      clock drift on the caller also surfaces as this error.
+  - status: 401
+    title: Unauthorized - No Token Found in request
+    detail: The `token` request header was absent.
+    body: '{"error": "Unauthorized - No Token Found in request"}'
+    source_operation:
+      - openapi/choozle-accounts-api-openapi.yml#listAccounts
+      - openapi/choozle-reports-api-openapi.yml#getReports
+    evidence: >-
+      observed on live GETs to https://app.choozle.com/api/accounts and
+      https://app.choozle.com/api/reports with no credentials, 2026-08-13
+    remediation: >-
+      Send the token from POST /api/auth as a `token` request header. Note it is
+      a custom header, not Authorization: Bearer — a standard bearer-auth client
+      will produce exactly this error.
+  - status: 401
+    title: Unauthorized - Token is expired
+    detail: The presented token is older than its two-hour lifetime.
+    body: '{"error": "Unauthorized - Token is expired"}'
+    source_operation: openapi/choozle-accounts-api-openapi.yml#listAccounts
+    evidence: apiDoc error example, https://app.choozle.com/apidoc/api_data.json
+    remediation: >-
+      Re-run the POST /api/auth exchange. There is no refresh token. Tokens are
+      valid for two hours from creation, so long-running report pulls must plan
+      to re-authenticate mid-run.
+  - status: 401
+    title: Unauthorized - Request token is expired.
+    detail: >-
+      The reports endpoint's own wording for an expired token. Note it differs
+      from the accounts endpoint's wording for the same condition, including the
+      trailing period — a client matching on message strings must handle both.
+    body: '{"error": "Unauthorized - Request token is expired."}'
+    source_operation: openapi/choozle-reports-api-openapi.yml#getReports
+    evidence: apiDoc error example, https://app.choozle.com/apidoc/api_data.json
+    remediation: Re-run the POST /api/auth exchange.
+gaps:
+  - >-
+    No 4xx is documented for the mutually exclusive report filters
+    (campaign_id vs campaign_status vs ad_group_id), for a missing required
+    account_id, or for a malformed date. The apiDoc lists only a 401 class for
+    every operation.
+  - >-
+    No 5xx behaviour is documented anywhere in the provider's contract.
+  - >-
+    No 404 is documented for an account_id the caller cannot reach.
+  - >-
+    Requesting an unrouted path under /api returns the application's HTML 404
+    page rather than the JSON error envelope, so a client must not assume every
+    /api response is JSON. Verified: GET https://app.choozle.com/api/authorization
+    returned 404 text/html.

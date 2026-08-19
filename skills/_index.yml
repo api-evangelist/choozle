@@ -1,0 +1,30 @@
+generated: '2026-08-13'
+method: generated
+source: >-
+  openapi/ (transcribed from https://app.choozle.com/apidoc/api_data.json),
+  https://help.choozle.com/connecting-to-choozles-reporting-api
+note: >-
+  Choozle publishes no AGENTS.md, skill files or agent guidance of its own. These
+  are API Evangelist packaged operating instructions, grounded in operationIds
+  verified against the provider's published contract and live probes on
+  2026-08-13.
+skills:
+  - file: choozle-authenticate.md
+    name: Authenticate to the Choozle Reporting API
+    description: >-
+      Exchange an API profile email and private key for a two-hour token via the
+      HMAC-SHA256 handshake, and attach it as the custom `token` header.
+    api: openapi/choozle-authorization-api-openapi.yml
+    operations:
+      - getAuthorizationToken
+  - file: choozle-pull-campaign-performance.md
+    name: Pull Choozle campaign performance
+    description: >-
+      Resolve account and campaign names to ids from the account tree, then pull
+      daily per-ad-group performance rows, respecting the mutually exclusive
+      report filters and the sparse-row behaviour.
+    api: openapi/choozle-reports-api-openapi.yml
+    operations:
+      - getAuthorizationToken
+      - listAccounts
+      - getReports

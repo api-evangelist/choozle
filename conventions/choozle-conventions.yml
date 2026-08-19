@@ -1,0 +1,163 @@
+generated: '2026-08-13'
+method: searched
+source: https://help.choozle.com/connecting-to-choozles-reporting-api
+also_derived_from:
+  - openapi/_original/openapi.yml
+  - https://app.choozle.com/apidoc/api_data.json
+  - live unauthenticated probes of https://app.choozle.com/api/* on 2026-08-13
+summary: >-
+  A small, flat, read-mostly reporting API with a signed-handshake auth model and
+  almost no cross-cutting runtime semantics. There is no idempotency contract, no
+  pagination, no field expansion, no request-id tracing and no rate-limit
+  signalling. The one convention an integrator must get exactly right is the
+  signature encoding, and it is the provider's own documented top support issue.
+
+authentication:
+  style: signed-handshake-then-bearer-token
+  token_endpoint: POST https://app.choozle.com/api/auth
+  request_encoding: application/x-www-form-urlencoded
+  parameter_location: body
+  parameter_location_note: >-
+    The knowledge base is explicit that POST calls must carry parameters in the
+    BODY, not the header. This is listed as a common troubleshooting issue.
+  signature:
+    algorithm: HMAC-SHA256
+    signed_payload: concatenation of the submitted email and timestamp values
+    key: the account's API private key
+    encoding: lowercase hex
+    encoding_note: >-
+      "Make sure the hashed signature is in 'hex' format, not HEX or base64."
+      Uppercase hex and base64 are rejected. Listed first in the provider's own
+      troubleshooting list.
+  timestamp:
+    format: ISO 8601 datetime
+    example: '2015-05-04T11:34:02-06:00'
+    skew_tolerance: five minutes
+    skew_note: The timestamp must be within five minutes of the server's current time.
+  credential_header: token
+  credential_header_note: >-
+    A custom `token` header, not `Authorization: Bearer`. Standard bearer-token
+    clients and OpenAPI-driven codegen will need this overridden explicitly.
+  token_ttl_seconds: 7200
+  token_refresh: re-authenticate; there is no refresh token
+  key_issuance: >-
+    An ORG admin or advertiser admin creates an API profile/username; the system
+    generates the API secret key, which is released only by submitting a ticket
+    through the Customer Portal. There is no self-service key page.
+  see: authentication/choozle-authentication.yml
+
+idempotency:
+  supported: false
+  header: null
+  evidence: >-
+    No idempotency key appears in the provider's apiDoc dataset, in the
+    knowledge-base article, or as a parameter in any operation. Only one write
+    operation exists (the token exchange), and it is naturally re-runnable — a
+    repeat call simply mints another token — but Choozle publishes no
+    idempotency contract, so no Idempotency pointer is emitted.
+
+pagination:
+  supported: false
+  evidence: >-
+    Neither GET /api/accounts nor GET /api/reports declares a limit, offset,
+    page or cursor parameter, and neither response carries paging metadata.
+    GET /api/accounts returns the full account tree in one document and
+    GET /api/reports returns an unbounded array of one row per active ad group
+    per day. Response size is bounded only by the date range the caller asks
+    for, which is the practical throttle on this API.
+
+filtering:
+  supported: true
+  style: query parameters on GET /api/reports
+  required:
+    - account_id
+  optional:
+    - date_start
+    - date_end
+    - campaign_id
+    - campaign_status
+    - ad_group_id
+  mutual_exclusions:
+    - campaign_id cannot be combined with campaign_status
+    - ad_group_id cannot be combined with campaign_id or campaign_status
+  multi_value: >-
+    ad_group_id accepts one or more ids, comma separated, e.g.
+    ad_group_id=42506,42507,42508,41194
+  open_ended_ranges: >-
+    date_start used without date_end returns reports on and after date_start;
+    date_end used without date_start returns reports on and before date_end.
+
+sparse_responses:
+  omitted_rows: >-
+    Reports are sparse by design. "If no reports were recorded for an ad group
+    on a particular day, that report is omitted." A consumer building a
+    continuous time series must fill the gaps itself rather than expect a zero
+    row.
+
+field_expansion:
+  supported: false
+  note: >-
+    No expand/fields parameter. GET /api/accounts always returns the fully
+    nested account -> campaign -> ad group tree; there is no way to ask for a
+    flat account list.
+
+metadata:
+  supported: false
+
+request_tracing:
+  request_id_header: null
+  evidence: >-
+    Live probes of https://app.choozle.com/api/accounts returned only date,
+    content-type, content-length, server, via and Cloudflare's cf-ray. There is
+    no provider-issued correlation id, so a support ticket cannot cite one.
+
+versioning:
+  scheme: none-in-transport
+  note: >-
+    No version segment in the path, no version header, no version query
+    parameter. The base URL is https://app.choozle.com/api with resources
+    directly beneath it. Version numbers exist only inside the published apiDoc
+    metadata (operations 1.0.0, project 0.1.0), which a caller cannot select or
+    pin.
+  see: lifecycle/choozle-lifecycle.yml
+
+error_envelope:
+  format: custom-json
+  rfc9457: false
+  content_type: application/json; charset=UTF-8
+  shape: '{"error": "<human-readable string>"}'
+  note: >-
+    A single untyped string. There is no machine-readable error code, no type
+    URI, and no field pointing at the offending parameter, so a client must
+    branch on HTTP status plus string matching.
+  observed:
+    - status: 401
+      body: '{"error":"Request incomplete"}'
+      operation: POST /api/auth
+    - status: 401
+      body: '{"error":"Unauthorized - No Token Found in request"}'
+      operation: GET /api/accounts, GET /api/reports
+  see: errors/choozle-problem-types.yml
+
+rate_limiting:
+  documented: false
+  response_headers: []
+  headers_note: >-
+    No X-RateLimit-*, RateLimit-* or Retry-After header was present on any live
+    response. The only published runtime budget is the two-hour token lifetime.
+  see: rate-limits/choozle-rate-limits.yml
+
+content_types:
+  request:
+    - application/x-www-form-urlencoded
+  response:
+    - application/json
+
+transport:
+  https_only: true
+  http2: true
+  edge: Cloudflare
+  hsts_on_api_host: false
+  hsts_note: >-
+    app.choozle.com does not send Strict-Transport-Security, while choozle.com
+    and help.choozle.com both do. See security/choozle-domain-security.yml.

@@ -1,17 +1,109 @@
-generated: '2026-07-11'
-method: derived
-source: openapi/openapi.yml
+generated: '2026-08-13'
+method: searched
+source: https://help.choozle.com/connecting-to-choozles-reporting-api
+docs:
+  - https://help.choozle.com/connecting-to-choozles-reporting-api
+  - https://app.choozle.com/apidoc/
+also_derived_from:
+  - openapi/_original/openapi.yml
+  - https://app.choozle.com/apidoc/api_data.json
 summary:
   types:
-  - apiKey
+    - apiKey
   api_key_in:
-  - header
+    - header
+  oauth2_flows: []
+  model: signed-handshake-then-opaque-token
+  note: >-
+    Not a static API key despite the apiKey scheme type. Choozle uses a two-step
+    model: an HMAC-SHA256 signed request exchanges a long-lived private key for
+    a short-lived opaque token, and only that token is sent on subsequent calls.
+    The private key itself never travels on a reporting request.
 schemes:
-- name: tokenHeader
-  type: apiKey
-  in: header
-  parameter: token
-  description: API token obtained from the /authorization endpoint. Valid for 2 hours. Pass
-    the token value as the `token` request header.
-  sources:
-  - openapi/openapi.yml
+  - name: tokenHeader
+    type: apiKey
+    in: header
+    parameter: token
+    description: >-
+      Authentication token generated from the /api/auth endpoint. Valid for two
+      hours from creation. Sent as the `token` request header — not
+      Authorization: Bearer.
+    sources:
+      - openapi/_original/openapi.yml
+      - openapi/choozle-accounts-api-openapi.yml
+      - openapi/choozle-reports-api-openapi.yml
+    applies_to:
+      - listAccounts
+      - getReports
+handshake:
+  endpoint: POST https://app.choozle.com/api/auth
+  unauthenticated: true
+  content_type: application/x-www-form-urlencoded
+  parameter_location: body
+  parameter_location_note: >-
+    Parameters must be in the BODY, not the header. The provider lists sending
+    them as headers as a common troubleshooting failure.
+  parameters:
+    - name: email
+      required: true
+      type: string
+      description: >-
+        The email on the API profile. Google-hosted mailboxes can use a plus
+        alias (user+api@choozle.com) so the API identity is a distinct address
+        that still delivers to the human's inbox.
+    - name: timestamp
+      required: true
+      type: ISO 8601 datetime
+      example: '2015-05-04T11:34:02-06:00'
+      constraint: must be within five minutes of the Choozle server's current time
+    - name: signature
+      required: true
+      type: string
+      description: >-
+        HMAC-SHA256 digest of the concatenation of the submitted email and
+        timestamp, keyed with the API private key.
+      encoding: lowercase hex
+      encoding_constraint: >-
+        Lowercase hex only. Uppercase hex and base64 are both rejected, and this
+        is the provider's first-listed troubleshooting issue.
+  returns:
+    field: token
+    type: string
+    ttl_seconds: 7200
+    refresh: none — re-run the handshake
+credentials:
+  self_service: false
+  issuance: >-
+    An ORG admin or advertiser admin creates an API profile/username for the
+    account, at which point the system generates an API secret key. The key is
+    released only by submitting a ticket through the Choozle Customer Portal.
+    There is no self-service key page and no key-management API.
+  rotation: not documented
+  scopes: none
+  scopes_note: >-
+    There is no scope or permission model on the API. Access is all-or-nothing
+    at the account level, determined by which accounts the API profile is
+    attached to.
+  api_only_role: >-
+    "API Only access: Full access to account data through the API, including
+    campaign and ad group reporting data. An API Only user cannot view, edit, or
+    otherwise access the account from the website." This is a genuine least-
+    privilege control — a machine credential that cannot log into the UI.
+transport:
+  https_only: true
+  tls_version: TLSv1.3
+  hsts: false
+  hsts_note: >-
+    app.choozle.com does not send Strict-Transport-Security, so the credential
+    exchange is not HSTS-protected even though it is HTTPS-only in practice.
+failure_modes:
+  - status: 401
+    body: '{"error": "Request incomplete"}'
+    cause: missing or unverifiable email/timestamp/signature on the handshake
+  - status: 401
+    body: '{"error": "Unauthorized - No Token Found in request"}'
+    cause: no `token` header on a reporting call
+  - status: 401
+    body: '{"error": "Unauthorized - Token is expired"}'
+    cause: token older than two hours
+see: errors/choozle-problem-types.yml

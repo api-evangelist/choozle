@@ -1,26 +1,51 @@
 {
-  "description": "Example: Retrieve campaign performance report for an account and date range",
+  "description": "Example: retrieve daily per-ad-group performance rows. Response body transcribed verbatim from Choozle's published apiDoc success example; the multi-ad-group query form is quoted from the Choozle knowledge base article.",
+  "source": "https://app.choozle.com/apidoc/api_data.json",
   "request": {
     "method": "GET",
-    "url": "https://app.choozle.com/api/reports?account_id=8737&date_start=2023-01-16&date_end=2023-02-16",
+    "url": "https://app.choozle.com/api/reports?account_id=85&date_start=2017-12-11&date_end=2017-12-11&ad_group_id=42506,42507,42508,41194",
     "headers": {
-      "token": "2fb94ad2e255b2d3961f5178ccf5ac105825156c2c84ac2bff48bd49b4ef69b7"
+      "token": "REDACTED_EXAMPLE_TOKEN"
     }
   },
   "response": {
     "status": 200,
     "body": [
       {
-        "account_id": 8737,
-        "date": "2023-01-16",
-        "impressions": 100000,
-        "clicks": 850,
-        "spend": 1250.75,
-        "conversions": 42,
-        "ctr": 0.0085,
-        "cpc": 1.47,
-        "cpm": 12.51
+        "date": "2014-12-02",
+        "account_id": "1",
+        "account_name": "Acme",
+        "campaign_id": "15",
+        "campaign_name": "Campaign 1",
+        "ad_group_id": "154",
+        "ad_group_name": "Ad Group 1",
+        "advertiser_cost": 0,
+        "impressions_won": 3,
+        "win": 0,
+        "cpm": 0,
+        "cpc": 0,
+        "ctr": 0,
+        "cpa": 0,
+        "clicks": 0,
+        "impressions_bid_on": 0,
+        "conversions": 0
       }
     ]
-  }
+  },
+  "errors": [
+    {
+      "status": 401,
+      "body": {
+        "error": "Unauthorized - No Token Found in request"
+      },
+      "observed": "live probe, GET https://app.choozle.com/api/reports with no token, 2026-08-13"
+    },
+    {
+      "status": 401,
+      "body": {
+        "error": "Unauthorized - Request token is expired."
+      },
+      "source": "apiDoc error example"
+    }
+  ]
 }

@@ -1,0 +1,62 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  registry.npmjs.org search, pypi.org, rubygems.org, crates.io,
+  api.github.com/orgs/choozle/repos, and the Choozle knowledge-base API article
+summary: >-
+  Choozle publishes no first-party client library in any package registry. The
+  knowledge-base article for the Reporting API tells integrators to write the
+  HMAC-SHA256 signing step themselves ("we recommend using PHP or Python") and
+  links to Postman for manual calls rather than to an SDK. Choozle's GitHub
+  organization exists and is public, but its three repositories are internal
+  tooling and a hiring exercise, not API clients.
+package_count: 0
+official_sdk_count: 0
+packages: []
+registries_searched:
+  - registry: npm
+    query: choozle
+    endpoint: https://registry.npmjs.org/-/v1/search?text=choozle
+    results: 0
+  - registry: pypi
+    query: choozle
+    endpoint: https://pypi.org/pypi/choozle/json
+    results: 0
+    http_status: 404
+  - registry: rubygems
+    query: choozle
+    endpoint: https://rubygems.org/api/v1/gems/choozle.json
+    results: 0
+  - registry: crates.io
+    query: choozle
+    endpoint: https://crates.io/api/v1/crates?q=choozle
+    results: 0
+github_organization:
+  url: https://github.com/choozle
+  http_status: 200
+  public_repos: 3
+  api_client_repos: 0
+  repositories:
+    - name: docker-ssh-tunnel
+      url: https://github.com/choozle/docker-ssh-tunnel
+      description: Simple SSH tunnel with Docker
+      last_push: '2019-10-10'
+      archived: true
+      api_client: false
+    - name: chz.ly
+      url: https://github.com/choozle/chz.ly
+      description: choozle's code pairing exercise repo - a url shortener project
+      last_push: '2020-05-12'
+      archived: false
+      api_client: false
+    - name: clubhouse-csv-import
+      url: https://github.com/choozle/clubhouse-csv-import
+      description: Import Story cards to Clubhouse from a CSV File
+      last_push: '2021-05-07'
+      archived: false
+      api_client: false
+note: >-
+  version and published are recorded as null across the board because there is
+  no package to read them from — this is a checked absence, not an unchecked
+  field. No SDKs pointer is written into apis.yml, because emitting one would
+  credit Choozle with a client library it does not ship.

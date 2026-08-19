@@ -1,0 +1,81 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Choozle Reporting Reports API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "token",
+      "value": "{{token}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Reports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Reports",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.choozle.com/api/reports",
+            "headers": [
+              {
+                "name": "token",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "query",
+                "description": "The account to report on."
+              },
+              {
+                "name": "date_start",
+                "value": "",
+                "type": "query",
+                "description": "Beginning of the date range (inclusive), ISO 8601 date, e.g. 2015-05-04. If used without date_end, returns valid reports after and including date_start.\n"
+              },
+              {
+                "name": "date_end",
+                "value": "",
+                "type": "query",
+                "description": "End of the date range (inclusive), ISO 8601 date, e.g. 2015-05-04. If used without date_start, returns valid reports before and including date_end.\n"
+              },
+              {
+                "name": "campaign_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to one campaign. Cannot be combined with campaign_status."
+              },
+              {
+                "name": "campaign_status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by campaign status. Cannot be combined with campaign_id."
+              },
+              {
+                "name": "ad_group_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter to one or more ad groups, comma separated. Cannot be combined with campaign_id or campaign_status.\n"
+              }
+            ]
+          },
+          "docs": "Returns an array of reports for the given filters. There is one report per active ad group per day; if no reports were recorded for an ad group on a particular day, that report is omitted.\n\n`campaign_id` cannot be combined with `campaign_status`. `ad_group_id` cannot be combined with `campaign_id` or `campaign_status`, and accepts one or more comma-separated ids.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

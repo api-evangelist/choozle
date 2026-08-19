@@ -1,23 +1,55 @@
 {
-  "description": "Example: List all advertising accounts accessible to the authenticated user",
+  "description": "Example: list the accounts, campaigns and ad groups the API user can reach. Response body transcribed verbatim from Choozle's published apiDoc success example.",
+  "source": "https://app.choozle.com/apidoc/api_data.json",
   "request": {
     "method": "GET",
     "url": "https://app.choozle.com/api/accounts",
     "headers": {
-      "token": "2fb94ad2e255b2d3961f5178ccf5ac105825156c2c84ac2bff48bd49b4ef69b7"
+      "token": "REDACTED_EXAMPLE_TOKEN"
     }
   },
   "response": {
     "status": 200,
-    "body": [
-      {
-        "id": 8737,
-        "name": "Acme Corp Account"
+    "body": {
+      "accounts": [
+        {
+          "id": "1",
+          "name": "Acme",
+          "account_state": "A",
+          "campaigns": [
+            {
+              "id": "15",
+              "name": "June2014",
+              "start_date": "2014-06-20",
+              "end_date": "2014-07-31",
+              "archived": "N",
+              "ad_groups": [
+                {
+                  "id": "154",
+                  "name": "Ad Category",
+                  "status": "E"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "errors": [
+    {
+      "status": 401,
+      "body": {
+        "error": "Unauthorized - No Token Found in request"
       },
-      {
-        "id": 9102,
-        "name": "Demo Advertiser Account"
-      }
-    ]
-  }
+      "observed": "live probe, GET https://app.choozle.com/api/accounts with no token, 2026-08-13"
+    },
+    {
+      "status": 401,
+      "body": {
+        "error": "Unauthorized - Token is expired"
+      },
+      "source": "apiDoc error example"
+    }
+  ]
 }

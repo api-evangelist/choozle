@@ -1,20 +1,31 @@
-generated: '2026-07-15'
+generated: '2026-08-13'
 method: generated
-source: openapi/openapi.yml
+source: openapi/choozle-accounts-api-openapi.yml, openapi/choozle-authorization-api-openapi.yml,
+  openapi/choozle-reports-api-openapi.yml
 description: Recommended x-agentic-access execution contracts, classified heuristically from
   the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
   audience per deployment. See research/curity/agentic-governance/.
 summary:
   operations: 3
   by_action_class:
-    acting: 1
     connected: 2
+    acting: 1
   by_consequence:
-    write: 1
     read: 2
+    write: 1
   human_in_the_loop_required: 0
 operations:
-- path: /authorization
+- path: /accounts
+  method: get
+  operationId: listAccounts
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /auth
   method: post
   operationId: getAuthorizationToken
   x-agentic-access:
@@ -30,16 +41,6 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /accounts
-  method: get
-  operationId: listAccounts
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
 - path: /reports
   method: get
   operationId: getReports

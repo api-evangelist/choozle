@@ -1,0 +1,58 @@
+generated: '2026-08-13'
+method: derived
+status: candidate
+source: openapi/_original/openapi.yml
+summary: >-
+  Choozle ships no MCP server. Searches of the Choozle site, knowledge base,
+  GitHub organization and the npm registry found no hosted endpoint and no
+  stdio package, and no MCP path is served on any Choozle host. The tools below
+  are a CANDIDATE surface derived from the three operations in Choozle's own
+  published contract — they describe what an MCP server for this API would
+  expose, not something an agent can call today.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: api-key
+  verified: searched
+  note: >-
+    mode is none because nobody ships a server. auth records what the
+    underlying API requires (an HMAC-signed token exchange yielding a
+    two-hour `token` header) so a future server has the right contract. No
+    endpoint URL is guessed: a fabricated MCP path that happened to answer
+    would read as a verified agent surface.
+search_evidence:
+  - source: https://registry.npmjs.org/-/v1/search?text=choozle
+    result: 0 packages
+  - source: https://github.com/choozle
+    result: 3 public repos, none MCP-related
+  - source: https://app.choozle.com/.well-known/ai-plugin.json
+    http_status: 404
+  - source: https://help.choozle.com/connecting-to-choozles-reporting-api
+    http_status: 200
+    result: no MCP or agent tooling mentioned
+server:
+  name: choozle
+  transport: null
+  url: null
+tools:
+  - name: get_authorization_token
+    description: >-
+      Exchange an API profile email, an ISO 8601 timestamp within five minutes
+      of server time, and an HMAC-SHA256 hex signature for a token valid two
+      hours.
+    source_operation: openapi/choozle-authorization-api-openapi.yml#getAuthorizationToken
+    consequence: write
+  - name: list_accounts
+    description: >-
+      List the advertising accounts the API user can reach, including each
+      account's campaigns and each campaign's ad groups.
+    source_operation: openapi/choozle-accounts-api-openapi.yml#listAccounts
+    consequence: read
+  - name: get_reports
+    description: >-
+      Retrieve daily per-ad-group performance rows for an account, optionally
+      filtered by date range, campaign, campaign status or ad group ids.
+    source_operation: openapi/choozle-reports-api-openapi.yml#getReports
+    consequence: read

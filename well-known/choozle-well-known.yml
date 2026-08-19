@@ -1,0 +1,100 @@
+generated: '2026-08-13'
+method: probed
+source: live HTTP probes of every Choozle host in apis.yml and openapi servers[]
+summary: >-
+  No /.well-known/ document is served by Choozle on any host. app.choozle.com
+  (the API host) returns a hard 404 for every path. choozle.com is a WordPress
+  site with a catch-all that answers HTTP 200 and an HTML marketing page for
+  every /.well-known/ path — a soft 404, NOT a served document. Those 200s are
+  recorded here as misses, and no WellKnown or SecurityTxt pointer is written
+  into apis.yml, because nothing was actually served.
+hosts:
+  - host: https://app.choozle.com
+    role: API host (OpenAPI servers[] and apis.yml baseURL)
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+        served: false
+      - path: /.well-known/openid-configuration
+        status: 404
+        served: false
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+        served: false
+      - path: /.well-known/api-catalog
+        status: 404
+        served: false
+      - path: /.well-known/ai-plugin.json
+        status: 404
+        served: false
+      - path: /.well-known/agent-card.json
+        status: 404
+        served: false
+      - path: /.well-known/agent.json
+        status: 404
+        served: false
+  - host: https://choozle.com
+    role: marketing website
+    note: >-
+      WordPress catch-all. Every probed path returned HTTP 200 with
+      content-type text/html and the site's marketing shell (~350KB), not a
+      document. Treated as a miss under the soft-404 rule.
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        served: false
+        content_type: text/html
+        reason: soft-404 HTML shell
+      - path: /.well-known/openid-configuration
+        status: 200
+        served: false
+        content_type: text/html
+        reason: soft-404 HTML shell
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+        served: false
+      - path: /.well-known/api-catalog
+        status: 200
+        served: false
+        content_type: text/html
+        reason: soft-404 HTML shell
+      - path: /.well-known/ai-plugin.json
+        status: 200
+        served: false
+        content_type: text/html
+        reason: soft-404 HTML shell
+      - path: /.well-known/agent-card.json
+        status: 200
+        served: false
+        content_type: text/html
+        reason: soft-404 HTML shell
+      - path: /.well-known/agent.json
+        status: 200
+        served: false
+        content_type: text/html
+        reason: soft-404 HTML shell
+  - host: https://help.choozle.com
+    role: knowledge base (HubSpot-hosted)
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+        served: false
+      - path: /.well-known/openid-configuration
+        status: 404
+        served: false
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+        served: false
+      - path: /.well-known/api-catalog
+        status: 404
+        served: false
+      - path: /.well-known/ai-plugin.json
+        status: 404
+        served: false
+      - path: /.well-known/agent-card.json
+        status: 404
+        served: false
+      - path: /.well-known/agent.json
+        status: 404
+        served: false
+documents_served: 0

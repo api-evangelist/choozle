@@ -1,21 +1,31 @@
 {
-  "description": "Example: Obtain an authorization token via HMAC-SHA256 signed POST request",
+  "description": "Example: obtain a two-hour API token via HMAC-SHA256 signed POST. Transcribed from Choozle's published apiDoc (https://app.choozle.com/apidoc/api_data.json) and verified against a live probe of POST https://app.choozle.com/api/auth on 2026-08-13.",
+  "source": "https://app.choozle.com/apidoc/api_data.json",
   "request": {
     "method": "POST",
-    "url": "https://app.choozle.com/api/authorization",
+    "url": "https://app.choozle.com/api/auth",
     "headers": {
       "Content-Type": "application/x-www-form-urlencoded"
     },
     "body": {
-      "email": "user@example.com",
-      "timestamp": 1674000000,
-      "signature": "a3f2c1d4e5b6789012345678abcdef0123456789abcdef0123456789abcdef01"
+      "email": "user+api@example.com",
+      "timestamp": "2015-05-04T11:34:02-06:00",
+      "signature": "REDACTED_EXAMPLE_SIGNATURE_HEX"
     }
   },
   "response": {
     "status": 200,
     "body": {
-      "token": "2fb94ad2e255b2d3961f5178ccf5ac105825156c2c84ac2bff48bd49b4ef69b7"
+      "token": "REDACTED_EXAMPLE_TOKEN"
     }
-  }
+  },
+  "errors": [
+    {
+      "status": 401,
+      "body": {
+        "error": "Request incomplete"
+      },
+      "observed": "live probe, POST https://app.choozle.com/api/auth with empty body, 2026-08-13"
+    }
+  ]
 }

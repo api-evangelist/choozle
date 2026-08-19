@@ -1,0 +1,120 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/_original/openapi.yml
+enriched_from: https://app.choozle.com/apidoc/api_data.json
+summary: >-
+  A three-level advertising hierarchy — Account contains Campaigns, a Campaign
+  contains Ad Groups — plus a daily fact row keyed at the ad group grain. The
+  whole graph is delivered by one call: GET /api/accounts returns the nested
+  tree. GET /api/reports returns denormalized rows that repeat the account,
+  campaign and ad group names alongside their ids, so a consumer can load
+  reports without first walking the tree.
+identifiers:
+  style: opaque numeric strings
+  note: >-
+    Every id in the published examples is a JSON string containing digits
+    ("1", "15", "154") even though the report query parameters are documented as
+    integers. Clients should treat ids as strings on the response side and not
+    round-trip them through an integer type.
+  prefixes: none
+entities:
+  - name: Account
+    description: A Choozle advertising account.
+    source_schema: openapi/_original/openapi.yml#/components/schemas/Account
+    returned_by: listAccounts
+    fields:
+      - {name: id, type: string, role: primary_key}
+      - {name: name, type: string}
+      - {name: account_state, type: enum, values: [A, I, C, P]}
+      - {name: campaigns, type: array, role: embedded_children}
+    enums:
+      account_state:
+        A: Active
+        I: Inactive, error with account
+        C: Cancelled
+        P: Paused
+  - name: Campaign
+    description: A campaign within an account.
+    source_schema: openapi/_original/openapi.yml#/components/schemas/Campaign
+    returned_by: listAccounts
+    fields:
+      - {name: id, type: string, role: primary_key}
+      - {name: name, type: string}
+      - {name: start_date, type: date}
+      - {name: end_date, type: date}
+      - {name: archived, type: enum, values: [Y, N]}
+      - {name: ad_groups, type: array, role: embedded_children}
+  - name: AdGroup
+    description: An ad group within a campaign. The grain of the reporting fact table.
+    source_schema: openapi/_original/openapi.yml#/components/schemas/AdGroup
+    returned_by: listAccounts
+    fields:
+      - {name: id, type: string, role: primary_key}
+      - {name: name, type: string}
+      - {name: status, type: enum, values: [I, U, E, D, S, W, O, B, C, A]}
+    enums:
+      status:
+        I: Incomplete
+        U: Unapproved
+        E: Enabled
+        D: Disabled
+        S: Scheduled
+        W: Error
+        O: Over Ad Group's Budget
+        B: Over Ad Group's Daily Budget
+        C: Campaign Over Budget
+        A: Campaign Over Daily Budget
+    note: >-
+      The status enum mixes two concerns — approval/run state (I, U, E, D, S, W)
+      and budget exhaustion (O, B, C, A) — and the budget values report on the
+      parent campaign as well as the ad group itself.
+  - name: ReportRow
+    description: One day of performance for one ad group.
+    source_schema: openapi/_original/openapi.yml#/components/schemas/ReportRow
+    returned_by: getReports
+    grain: (ad_group_id, date)
+    fields:
+      - {name: date, type: date, role: grain_key}
+      - {name: account_id, type: string, role: foreign_key}
+      - {name: account_name, type: string, role: denormalized}
+      - {name: campaign_id, type: string, role: foreign_key}
+      - {name: campaign_name, type: string, role: denormalized}
+      - {name: ad_group_id, type: string, role: foreign_key}
+      - {name: ad_group_name, type: string, role: denormalized}
+      - {name: advertiser_cost, type: number, role: measure}
+      - {name: impressions_bid_on, type: integer, role: measure}
+      - {name: impressions_won, type: integer, role: measure}
+      - {name: win, type: number, role: measure}
+      - {name: clicks, type: integer, role: measure}
+      - {name: conversions, type: integer, role: measure}
+      - {name: cpm, type: number, role: measure}
+      - {name: cpc, type: number, role: measure}
+      - {name: ctr, type: number, role: measure}
+      - {name: cpa, type: number, role: measure}
+    sparsity: >-
+      Rows are omitted entirely for an ad group on a day with no recorded
+      activity, rather than returned as zeros.
+  - name: AuthorizationToken
+    description: A two-hour bearer credential minted by the token exchange.
+    source_schema: openapi/_original/openapi.yml#/components/schemas/AuthorizationToken
+    returned_by: getAuthorizationToken
+    lifetime_seconds: 7200
+relationships:
+  - {from: Account, to: Campaign, type: has_many, via: campaigns, style: embedded}
+  - {from: Campaign, to: AdGroup, type: has_many, via: ad_groups, style: embedded}
+  - {from: Campaign, to: Account, type: belongs_to, via: account_id, style: reference, seen_on: ReportRow}
+  - {from: AdGroup, to: Campaign, type: belongs_to, via: campaign_id, style: reference, seen_on: ReportRow}
+  - {from: ReportRow, to: AdGroup, type: belongs_to, via: ad_group_id}
+  - {from: ReportRow, to: Campaign, type: belongs_to, via: campaign_id}
+  - {from: ReportRow, to: Account, type: belongs_to, via: account_id}
+  - {from: AdGroup, to: ReportRow, type: has_many, via: ad_group_id}
+notes:
+  - >-
+    The API is read-only over this model. Nothing in the public contract creates
+    or mutates an account, campaign, ad group, audience segment, creative or
+    deal — those live only in the Choozle web application. The apis.yml
+    description previously implied write access to campaigns, segments,
+    creatives and deals; the published contract does not support that claim.
+  - >-
+    There is no way to fetch a single account, campaign or ad group by id. The
+    only structural read is the full tree from GET /api/accounts.

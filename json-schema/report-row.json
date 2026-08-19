@@ -2,56 +2,63 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/api-evangelist/choozle/main/json-schema/report-row.json",
   "title": "ReportRow",
-  "description": "A single row of campaign performance data returned by the Choozle Reporting API.",
+  "description": "One day of performance for one ad group, as returned by GET /api/reports. Fields transcribed from the apiDoc success example at https://app.choozle.com/apidoc/api_data.json.",
   "type": "object",
   "properties": {
-    "account_id": {
-      "type": "integer",
-      "description": "Account identifier."
-    },
-    "ad_group_id": {
-      "type": "integer",
-      "description": "Ad group identifier."
-    },
     "date": {
       "type": "string",
-      "format": "date",
-      "description": "Date of the reported metrics in YYYY-MM-DD format."
+      "format": "date"
     },
-    "impressions": {
+    "account_id": {
+      "type": "string"
+    },
+    "account_name": {
+      "type": "string"
+    },
+    "campaign_id": {
+      "type": "string"
+    },
+    "campaign_name": {
+      "type": "string"
+    },
+    "ad_group_id": {
+      "type": "string"
+    },
+    "ad_group_name": {
+      "type": "string"
+    },
+    "advertiser_cost": {
+      "type": "number"
+    },
+    "impressions_won": {
       "type": "integer",
-      "description": "Number of ad impressions served.",
       "minimum": 0
+    },
+    "win": {
+      "type": "number"
+    },
+    "cpm": {
+      "type": "number"
+    },
+    "cpc": {
+      "type": "number"
+    },
+    "ctr": {
+      "type": "number"
+    },
+    "cpa": {
+      "type": "number"
     },
     "clicks": {
       "type": "integer",
-      "description": "Number of clicks recorded.",
       "minimum": 0
     },
-    "spend": {
-      "type": "number",
-      "description": "Total spend in USD.",
+    "impressions_bid_on": {
+      "type": "integer",
       "minimum": 0
     },
     "conversions": {
       "type": "integer",
-      "description": "Number of attributed conversions.",
-      "minimum": 0
-    },
-    "ctr": {
-      "type": "number",
-      "description": "Click-through rate (clicks / impressions).",
-      "minimum": 0,
-      "maximum": 1
-    },
-    "cpc": {
-      "type": "number",
-      "description": "Cost per click in USD.",
-      "minimum": 0
-    },
-    "cpm": {
-      "type": "number",
-      "description": "Cost per thousand impressions in USD.",
       "minimum": 0
     }
   }

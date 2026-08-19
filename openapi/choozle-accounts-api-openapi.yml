@@ -1,14 +1,25 @@
 openapi: 3.0.3
 info:
   title: Choozle Reporting Accounts API
-  description: 'REST API for accessing campaign performance data, account information, and advertising metrics across all channels managed within the Choozle platform. Supports programmatic retrieval of spend, impressions, clicks, conversions, and other KPIs by account, date range, and ad group.
+  description: 'REST API for retrieving Choozle advertising account structure (accounts, campaigns, ad
+    groups) and daily campaign performance reports. Authentication is an HMAC-SHA256 signed exchange at
+    POST /api/auth that returns a token valid for two hours; the token is then sent as a `token` request
+    header on every reporting call.
+
+
+    This document is transcribed from Choozle''s own published apiDoc dataset at https://app.choozle.com/apidoc/api_data.json
+    (saved verbatim alongside this file as choozle-apidoc-api_data.json) and verified against live unauthenticated
+    probes of the production host on 2026-08-13.
 
     '
-  version: '1.0'
+  version: 1.0.0
   contact:
     name: Choozle Support
     url: https://help.choozle.com/
   termsOfService: https://choozle.com/terms-of-service/
+externalDocs:
+  description: Choozle API Docs (apiDoc)
+  url: https://app.choozle.com/apidoc/
 servers:
 - url: https://app.choozle.com/api
   description: Choozle production API
@@ -20,55 +31,180 @@ paths:
   /accounts:
     get:
       operationId: listAccounts
-      summary: List accessible advertising accounts
-      description: Returns a list of Choozle advertising accounts accessible to the authenticated user.
+      summary: Get Account information
+      description: 'Returns the array of account objects the authenticated API user can reach, including
+        each account''s campaigns and each campaign''s ad groups.
+
+        '
+      tags:
+      - Accounts
+      parameters:
+      - $ref: '#/components/parameters/TokenHeader'
       responses:
         '200':
-          description: A list of account objects.
+          description: Account structure for the authenticated user.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Account'
+                $ref: '#/components/schemas/AccountsResponse'
+              example:
+                accounts:
+                - id: '1'
+                  name: Acme
+                  account_state: A
+                  campaigns:
+                  - id: '15'
+                    name: June2014
+                    start_date: '2014-06-20'
+                    end_date: '2014-07-31'
+                    archived: N
+                    ad_groups:
+                    - id: '154'
+                      name: Ad Category
+                      status: E
         '401':
-          description: Missing or invalid authorization token.
+          description: Unauthorized — no token found in the request, or the token is expired.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-      tags:
-      - Accounts
+              example:
+                error: Unauthorized - No Token Found in request
 components:
+  parameters:
+    TokenHeader:
+      name: token
+      in: header
+      required: true
+      description: Authentication token generated from the /api/auth endpoint.
+      schema:
+        type: string
   schemas:
+    Account:
+      type: object
+      description: A Choozle advertising account and its campaign tree.
+      properties:
+        id:
+          type: string
+          description: Account identifier.
+          example: '1'
+        name:
+          type: string
+          description: Account name.
+          example: Acme
+        account_state:
+          type: string
+          description: 'A: Active
+
+            I: Inactive, error with account
+
+            C: Cancelled
+
+            P: Paused
+
+            '
+          enum:
+          - A
+          - I
+          - C
+          - P
+        campaigns:
+          type: array
+          items:
+            $ref: '#/components/schemas/Campaign'
+    AccountsResponse:
+      type: object
+      description: Envelope carrying the array of account objects.
+      properties:
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+    AdGroup:
+      type: object
+      description: An ad group within a campaign.
+      properties:
+        id:
+          type: string
+          example: '154'
+        name:
+          type: string
+          example: Ad Category
+        status:
+          type: string
+          description: 'I: Incomplete
+
+            U: Unapproved
+
+            E: Enabled
+
+            D: Disabled
+
+            S: Scheduled
+
+            W: Error
+
+            O: Over Ad Group''s Budget
+
+            B: Over Ad Group''s Daily Budget
+
+            C: Campaign Over Budget
+
+            A: Campaign Over Daily Budget
+
+            '
+          enum:
+          - I
+          - U
+          - E
+          - D
+          - S
+          - W
+          - O
+          - B
+          - C
+          - A
+    Campaign:
+      type: object
+      description: A campaign within an account.
+      properties:
+        id:
+          type: string
+          example: '15'
+        name:
+          type: string
+          example: June2014
+        start_date:
+          type: string
+          format: date
+          example: '2014-06-20'
+        end_date:
+          type: string
+          format: date
+          example: '2014-07-31'
+        archived:
+          type: string
+          description: Y when the campaign is archived, N otherwise.
+          example: N
+        ad_groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdGroup'
     Error:
       type: object
-      description: API error response.
+      description: 'Choozle''s error envelope. A single `error` string; not RFC 9457 problem+json.
+
+        '
       properties:
         error:
           type: string
-          description: Human-readable error message.
-          example: Unauthorized
-    Account:
-      type: object
-      description: A Choozle advertising account.
-      properties:
-        id:
-          type: integer
-          description: Unique numeric account identifier.
-          example: 8737
-        name:
-          type: string
-          description: Human-readable account name.
-          example: Acme Corp Account
+          example: Unauthorized - No Token Found in request
   securitySchemes:
     tokenHeader:
       type: apiKey
       in: header
       name: token
-      description: 'API token obtained from the /authorization endpoint. Valid for 2 hours. Pass the token value as the `token` request header.
+      description: 'Authentication token generated from the /api/auth endpoint. Valid for two hours from
+        creation. Pass the token value as the `token` request header on every reporting call.
 
         '
-externalDocs:
-  description: Choozle Reporting API Documentation
-  url: https://help.choozle.com/connecting-to-choozles-reporting-api

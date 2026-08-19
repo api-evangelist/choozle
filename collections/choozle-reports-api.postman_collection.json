@@ -1,0 +1,275 @@
+{
+  "item": [
+    {
+      "id": "c7515ce8-e576-4bb4-9a88-aee7db587d18",
+      "name": "Reports",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b8a84045-af3f-4d4e-891d-153dead4506a",
+          "name": "Get Reports",
+          "request": {
+            "name": "Get Reports",
+            "description": {
+              "content": "Returns an array of reports for the given filters. There is one report per active ad group per day; if no reports were recorded for an ad group on a particular day, that report is omitted.\n\n`campaign_id` cannot be combined with `campaign_status`. `ad_group_id` cannot be combined with `campaign_id` or `campaign_status`, and accepts one or more comma-separated ids.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "reports"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "account_id",
+                  "value": "<integer>",
+                  "description": "(Required) The account to report on."
+                },
+                {
+                  "disabled": false,
+                  "key": "date_start",
+                  "value": "<date>",
+                  "description": "Beginning of the date range (inclusive), ISO 8601 date, e.g. 2015-05-04. If used without date_end, returns valid reports after and including date_start.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "date_end",
+                  "value": "<date>",
+                  "description": "End of the date range (inclusive), ISO 8601 date, e.g. 2015-05-04. If used without date_start, returns valid reports before and including date_end.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "campaign_id",
+                  "value": "<integer>",
+                  "description": "Filter to one campaign. Cannot be combined with campaign_status."
+                },
+                {
+                  "disabled": false,
+                  "key": "campaign_status",
+                  "value": "<string>",
+                  "description": "Filter by campaign status. Cannot be combined with campaign_id."
+                },
+                {
+                  "disabled": false,
+                  "key": "ad_group_id",
+                  "value": "<string>",
+                  "description": "Filter to one or more ad groups, comma separated. Cannot be combined with campaign_id or campaign_status.\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Authentication token generated from the /api/auth endpoint.",
+                "key": "token",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e00d6a85-d5e8-494e-aee9-ccc252818fe9",
+              "name": "Daily per-ad-group performance rows for the requested filters.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "reports"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "account_id",
+                      "value": "8737"
+                    },
+                    {
+                      "key": "date_start",
+                      "value": "2017-12-11"
+                    },
+                    {
+                      "key": "date_end",
+                      "value": "2017-12-11"
+                    },
+                    {
+                      "key": "campaign_id",
+                      "value": "15"
+                    },
+                    {
+                      "key": "campaign_status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "ad_group_id",
+                      "value": "42506,42507,42508,41194"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Authentication token generated from the /api/auth endpoint.",
+                    "key": "token",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"date\": \"2014-12-02\",\n    \"account_id\": \"1\",\n    \"account_name\": \"Acme\",\n    \"campaign_id\": \"15\",\n    \"campaign_name\": \"Campaign 1\",\n    \"ad_group_id\": \"154\",\n    \"ad_group_name\": \"Ad Group 1\",\n    \"advertiser_cost\": 0,\n    \"impressions_won\": 3,\n    \"win\": 0,\n    \"cpm\": 0,\n    \"cpc\": 0,\n    \"ctr\": 0,\n    \"cpa\": 0,\n    \"clicks\": 0,\n    \"impressions_bid_on\": 0,\n    \"conversions\": 0\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "86393305-1ad1-4162-8d5f-82fb3e6ecc5e",
+              "name": "Unauthorized — no token found in the request, or the request token is expired.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "reports"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "account_id",
+                      "value": "8737"
+                    },
+                    {
+                      "key": "date_start",
+                      "value": "2017-12-11"
+                    },
+                    {
+                      "key": "date_end",
+                      "value": "2017-12-11"
+                    },
+                    {
+                      "key": "campaign_id",
+                      "value": "15"
+                    },
+                    {
+                      "key": "campaign_status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "ad_group_id",
+                      "value": "42506,42507,42508,41194"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "token",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Authentication token generated from the /api/auth endpoint.",
+                    "key": "token",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Unauthorized - Request token is expired.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://app.choozle.com/api",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "token"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "97b1367c-ea63-4576-b27e-145627e1aee4",
+    "name": "Choozle Reporting Reports API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for retrieving Choozle advertising account structure (accounts, campaigns, ad groups) and daily campaign performance reports. Authentication is an HMAC-SHA256 signed exchange at POST /api/auth that returns a token valid for two hours; the token is then sent as a `token` request header on every reporting call.\n\nThis document is transcribed from Choozle's own published apiDoc dataset at https://app.choozle.com/apidoc/api_data.json (saved verbatim alongside this file as choozle-apidoc-api_data.json) and verified against live unauthenticated probes of the production host on 2026-08-13.\n\n\nContact Support:\n Name: Choozle Support",
+      "type": "text/plain"
+    }
+  }
+}

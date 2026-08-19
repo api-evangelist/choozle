@@ -1,0 +1,96 @@
+generated: '2026-08-13'
+method: searched
+source: https://choozle.com/managed-self-service/
+summary: >-
+  Choozle publishes no price list and no pricing page. There is no /pricing/ URL
+  on choozle.com — that path falls through to the WordPress catch-all and
+  returns the marketing homepage. What Choozle does publish, on its Managed &
+  Self-Service page, is a minimum media commitment for each of its two service
+  tiers. Those minimums are the only concrete published numbers, and neither is
+  a platform subscription price. Everything else routes to Request a Demo or
+  sales@choozle.com.
+plan_count: 2
+currency: USD
+pricing_page_published: false
+self_service_signup: false
+self_service_signup_note: >-
+  https://app.choozle.com/users/register returns 404. The login page is live but
+  there is no public self-serve registration path; onboarding runs through the
+  demo request and sales.
+plans:
+  - name: Self-Service
+    tier: self-service
+    price: null
+    price_note: >-
+      No platform subscription price is published for this tier.
+    minimum_commitment:
+      amount: 15000
+      currency: USD
+      period: 90 days
+      type: media spend
+      quote: >-
+        "with no contract commitments and a minimum media spend of $15,000 over
+        a 90-day period, you can adjust your strategy as needed"
+    contract: none
+    included:
+      - Plan, execute and optimize campaigns in the platform directly
+      - Unlimited advertiser accounts
+      - Access to training resources
+      - Reporting API access
+    source: https://choozle.com/managed-self-service/
+  - name: Managed Service
+    tier: managed
+    price: null
+    price_note: >-
+      No management fee percentage is published on the current site.
+    minimum_commitment:
+      amount: 10000
+      currency: USD
+      period: month
+      type: media spend
+      quote: >-
+        "With a minimum media spend requirement of $10,000 per month, a
+        dedicated account manager will guide you every step of the way."
+    included:
+      - Dedicated account manager
+      - Strategic advising
+      - Campaign optimization by the Choozle team
+    source: https://choozle.com/managed-self-service/
+add_ons:
+  - name: Supported Solutions
+    price: null
+    description: >-
+      Available "with additional investment" — premium inventory access,
+      advanced audience data, and targeting tactics implemented by the Account
+      Management team. No rate card is published.
+    source: https://choozle.com/managed-self-service/
+api_pricing:
+  metered: false
+  note: >-
+    The Reporting API carries no separate charge in anything Choozle publishes.
+    API access is a feature of the platform, gated by having an account and an
+    API profile rather than by a plan tier. No per-call pricing, quota or
+    overage is documented.
+sales_contact:
+  email: sales@choozle.com
+  phone: 970-744-3340
+  demo: https://choozle.com/connect/
+evidence:
+  - url: https://choozle.com/managed-self-service/
+    status: 200
+    finding: both media-spend minimums quoted above
+  - url: https://choozle.com/pricing/
+    status: 200
+    finding: soft 404 — returns the marketing homepage, not a pricing page
+  - url: https://choozle.com/plans-pricing/
+    status: 200
+    finding: soft 404 — returns the marketing homepage, not a pricing page
+  - url: https://app.choozle.com/users/register
+    status: 404
+    finding: no public self-serve registration
+supersedes: >-
+  plans/plans.md, which recorded a "$99/month starting price" and a "10%
+  management fee". Neither figure appears anywhere on the Choozle site as of
+  this pass, and the currently published commitments are the two media-spend
+  minimums above. plans.md is left in place as the prior narrative record but
+  this file is the evidenced artifact.

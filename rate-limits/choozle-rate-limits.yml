@@ -1,0 +1,77 @@
+generated: '2026-08-13'
+method: probed
+source: >-
+  live unauthenticated responses from https://app.choozle.com/api/* on
+  2026-08-13, plus https://help.choozle.com/connecting-to-choozles-reporting-api
+  and https://app.choozle.com/apidoc/
+summary: >-
+  Choozle publishes no rate limits and signals none at runtime. Neither the
+  knowledge-base article nor the apiDoc reference mentions throttling, quotas or
+  429s, and live responses carry no rate-limit headers of any kind. The only
+  published runtime budget on this API is the two-hour token lifetime, which is
+  a credential expiry rather than a rate limit.
+limit_count: 0
+limits: []
+response_headers:
+  standard_ratelimit_headers: false
+  vendor_ratelimit_headers: false
+  retry_after: false
+  observed_headers:
+    - date
+    - content-type
+    - content-length
+    - server
+    - via
+    - cf-cache-status
+    - cf-apo-via
+    - cf-ray
+  note: >-
+    No RateLimit-*, X-RateLimit-*, or Retry-After header was present. `cf-ray`
+    is a Cloudflare edge trace id, not a provider correlation id or a throttle
+    signal. An agent has no runtime way to learn its remaining budget.
+exhaustion_behavior:
+  status_code: undocumented
+  body: undocumented
+  note: >-
+    No 429 response is documented for any operation. The apiDoc lists only a 401
+    error class per operation, so a client cannot distinguish a throttle from an
+    auth failure by contract.
+credential_budget:
+  token_ttl_seconds: 7200
+  token_ttl_note: >-
+    Tokens expire two hours after creation and there is no refresh token; a
+    long-running extraction must re-run POST /api/auth mid-job.
+  timestamp_skew_seconds: 300
+  timestamp_skew_note: >-
+    The auth timestamp must be within five minutes of Choozle server time, so a
+    client with clock drift will fail the handshake regardless of rate.
+practical_constraints:
+  - >-
+    Response size, not request count, is the real cost driver. GET /api/reports
+    returns one row per active ad group per day with no pagination, so a wide
+    date range across a large account returns a single unbounded array.
+  - >-
+    GET /api/accounts returns the entire account/campaign/ad group tree in one
+    document with no pagination or filtering.
+  - >-
+    Callers should scope report pulls with account_id plus a bounded
+    date_start/date_end window, and cache the token for its full two hours
+    rather than re-authenticating per call.
+evidence:
+  - url: https://app.choozle.com/api/accounts
+    status: 401
+    finding: no rate-limit headers on the response
+  - url: https://app.choozle.com/api/reports
+    status: 401
+    finding: no rate-limit headers on the response
+  - url: https://app.choozle.com/apidoc/api_data.json
+    status: 200
+    finding: no throttling, quota or 429 documented for any of the three operations
+  - url: https://help.choozle.com/connecting-to-choozles-reporting-api
+    status: 200
+    finding: no rate limits mentioned; the only stated budget is the 2-hour token
+supersedes: >-
+  rate-limits/rate-limits.md, which attributed a "15-minute refresh cycle" and a
+  "99.9% uptime" to third-party integration partners. Those are partner product
+  claims, not Choozle-published limits or SLAs, and are not carried into this
+  artifact.

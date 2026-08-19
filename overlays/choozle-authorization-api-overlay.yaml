@@ -1,0 +1,45 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Choozle Authorization API
+  version: 1.0.0
+extends: openapi/choozle-authorization-api-openapi.yml
+x-generated: '2026-08-13'
+x-method: generated
+x-source: https://app.choozle.com/apidoc/api_data.json
+x-note: Choozle publishes no OpenAPI. Its machine-readable contract is an apiDoc 0.13.1 dataset at https://app.choozle.com/apidoc/api_data.json.
+  The OpenAPI this overlay extends is an API Evangelist transcription of that dataset, verified against
+  live unauthenticated probes on 2026-08-13. These actions record what API Evangelist adds on top of the
+  transcription; the provider contract is never mutated.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-contract-source: https://app.choozle.com/apidoc/api_data.json
+    x-apievangelist-contract-format: apidoc 0.13.1
+    x-apievangelist-verified: '2026-08-13'
+    x-apievangelist-provider-publishes-openapi: false
+- target: $.info
+  update:
+    x-apievangelist-reference-generated: '2015-06-04T16:45:58.265Z'
+    x-apievangelist-staleness-note: The provider reference has not been regenerated since June 2015 even
+      though the assets are still redeployed. See lifecycle/choozle-lifecycle.yml.
+- target: $.components.securitySchemes.tokenHeader
+  update:
+    x-apievangelist-model: signed-handshake-then-opaque-token
+    x-apievangelist-token-ttl-seconds: 7200
+    x-apievangelist-not-bearer: 'Credential is a custom `token` header, not Authorization: Bearer. Standard
+      bearer-auth clients and generated SDKs must override this.'
+    x-apievangelist-authentication: authentication/choozle-authentication.yml
+- target: $.components.schemas.Error
+  update:
+    x-apievangelist-rfc9457: false
+    x-apievangelist-error-catalog: errors/choozle-problem-types.yml
+    x-apievangelist-note: Untyped single-string envelope. Clients must branch on HTTP status plus substring
+      matching; the same expired-token condition is worded differently by the accounts and reports operations.
+- target: $.paths['/auth'].post
+  update:
+    x-apievangelist-path-correction: Verified as /auth. A prior API Evangelist transcription recorded
+      this operation at /authorization; GET and POST to https://app.choozle.com/api/authorization return
+      404 text/html, while /api/auth returns the JSON 401 envelope.
+    x-apievangelist-signature-encoding: lowercase hex only — uppercase hex and base64 are rejected
+    x-apievangelist-timestamp-skew-seconds: 300
+    x-apievangelist-parameter-location: body, application/x-www-form-urlencoded — not headers
