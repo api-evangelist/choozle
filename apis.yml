@@ -62,6 +62,8 @@ apis:
   humanURL: https://app.choozle.com/apidoc/
   baseURL: https://app.choozle.com/api
   tags:
+  - Account
+  tags_raw:
   - Accounts
   properties:
   - type: OpenAPI
