@@ -10,6 +10,18 @@ description: >-
   return daily per-ad-group performance rows. Campaign, audience, creative and
   deal management are performed in the web application only — no public API
   writes to them. Keys are issued by support ticket rather than self-service.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: sales-led
   onboarding: sales-led
