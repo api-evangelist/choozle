@@ -1,0 +1,347 @@
+openapi: 3.2.0
+info:
+  title: Choozle Outbound Reporting API
+  description: REST API for retrieving Choozle advertising account structure (accounts, campaigns, ad groups) and daily campaign performance reports.
+  version: 1.0.0
+  contact:
+    name: Choozle Support
+    url: https://help.choozle.com/
+  termsOfService: https://choozle.com/terms-of-service/
+servers:
+- url: https://app.choozle.com/api
+  description: Choozle production API
+security:
+- tokenHeader: []
+tags:
+- name: Reporting
+  description: Account structure and campaign performance reporting.
+paths:
+  /accounts:
+    get:
+      operationId: listAccounts
+      summary: Get Account information
+      description: Returns the array of account objects the authenticated API user can reach, including each account's campaigns and each campaign's ad groups.
+      tags:
+      - Reporting
+      parameters:
+      - $ref: '#/components/parameters/TokenHeader'
+      responses:
+        '200':
+          description: Account structure for the authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountsResponse'
+              example:
+                accounts:
+                - id: '1'
+                  name: Acme
+                  account_state: A
+                  campaigns:
+                  - id: '15'
+                    name: June2014
+                    start_date: '2014-06-20'
+                    end_date: '2014-07-31'
+                    archived: N
+                    ad_groups:
+                    - id: '154'
+                      name: Ad Category
+                      status: E
+        '401':
+          description: Unauthorized — no token found in the request, or the token is expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Unauthorized - No Token Found in request
+  /reports:
+    get:
+      operationId: getReports
+      summary: Get Reports
+      description: 'Returns an array of reports for the given filters. There is one report per active ad group per day; if no reports were recorded for an ad group on a particular day, that report is omitted.
+
+
+        `campaign_id` cannot be combined with `campaign_status`. `ad_group_id` cannot be combined with `campaign_id` or `campaign_status`, and accepts one or more comma-separated ids.'
+      tags:
+      - Reporting
+      parameters:
+      - $ref: '#/components/parameters/TokenHeader'
+      - name: account_id
+        in: query
+        required: true
+        description: The account to report on.
+        schema:
+          type: integer
+          example: 8737
+      - name: date_start
+        in: query
+        required: false
+        description: 'Beginning of the date range (inclusive), ISO 8601 date, e.g. 2015-05-04. If used without date_end, returns valid reports after and including date_start.
+
+          '
+        schema:
+          type: string
+          format: date
+          example: '2017-12-11'
+      - name: date_end
+        in: query
+        required: false
+        description: 'End of the date range (inclusive), ISO 8601 date, e.g. 2015-05-04. If used without date_start, returns valid reports before and including date_end.
+
+          '
+        schema:
+          type: string
+          format: date
+          example: '2017-12-11'
+      - name: campaign_id
+        in: query
+        required: false
+        description: Filter to one campaign. Cannot be combined with campaign_status.
+        schema:
+          type: integer
+          example: 15
+      - name: campaign_status
+        in: query
+        required: false
+        description: Filter by campaign status. Cannot be combined with campaign_id.
+        schema:
+          type: string
+          enum:
+          - all
+          - active
+          - inactive
+          - archived
+      - name: ad_group_id
+        in: query
+        required: false
+        description: 'Filter to one or more ad groups, comma separated. Cannot be combined with campaign_id or campaign_status.
+
+          '
+        schema:
+          type: string
+          example: 42506,42507,42508,41194
+      responses:
+        '200':
+          description: Daily per-ad-group performance rows for the requested filters.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReportRow'
+              example:
+              - date: '2014-12-02'
+                account_id: '1'
+                account_name: Acme
+                campaign_id: '15'
+                campaign_name: Campaign 1
+                ad_group_id: '154'
+                ad_group_name: Ad Group 1
+                advertiser_cost: 0
+                impressions_won: 3
+                win: 0
+                cpm: 0
+                cpc: 0
+                ctr: 0
+                cpa: 0
+                clicks: 0
+                impressions_bid_on: 0
+                conversions: 0
+        '401':
+          description: Unauthorized — no token found in the request, or the request token is expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Unauthorized - Request token is expired.
+components:
+  schemas:
+    Error:
+      type: object
+      description: 'Choozle''s error envelope. A single `error` string; not RFC 9457 problem+json.
+
+        '
+      properties:
+        error:
+          type: string
+          example: Unauthorized - No Token Found in request
+    AdGroup:
+      type: object
+      description: An ad group within a campaign.
+      properties:
+        id:
+          type: string
+          example: '154'
+        name:
+          type: string
+          example: Ad Category
+        status:
+          type: string
+          description: 'I: Incomplete
+
+            U: Unapproved
+
+            E: Enabled
+
+            D: Disabled
+
+            S: Scheduled
+
+            W: Error
+
+            O: Over Ad Group''s Budget
+
+            B: Over Ad Group''s Daily Budget
+
+            C: Campaign Over Budget
+
+            A: Campaign Over Daily Budget
+
+            '
+          enum:
+          - I
+          - U
+          - E
+          - D
+          - S
+          - W
+          - O
+          - B
+          - C
+          - A
+    ReportRow:
+      type: object
+      description: One day of performance for one ad group.
+      properties:
+        date:
+          type: string
+          format: date
+          example: '2014-12-02'
+        account_id:
+          type: string
+          example: '1'
+        account_name:
+          type: string
+          example: Acme
+        campaign_id:
+          type: string
+          example: '15'
+        campaign_name:
+          type: string
+          example: Campaign 1
+        ad_group_id:
+          type: string
+          example: '154'
+        ad_group_name:
+          type: string
+          example: Ad Group 1
+        advertiser_cost:
+          type: number
+          description: Advertiser cost for the day.
+        impressions_won:
+          type: integer
+          description: Impressions won.
+        win:
+          type: number
+          description: Win rate.
+        cpm:
+          type: number
+        cpc:
+          type: number
+        ctr:
+          type: number
+        cpa:
+          type: number
+        clicks:
+          type: integer
+        impressions_bid_on:
+          type: integer
+        conversions:
+          type: integer
+    Campaign:
+      type: object
+      description: A campaign within an account.
+      properties:
+        id:
+          type: string
+          example: '15'
+        name:
+          type: string
+          example: June2014
+        start_date:
+          type: string
+          format: date
+          example: '2014-06-20'
+        end_date:
+          type: string
+          format: date
+          example: '2014-07-31'
+        archived:
+          type: string
+          description: Y when the campaign is archived, N otherwise.
+          example: N
+        ad_groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdGroup'
+    Account:
+      type: object
+      description: A Choozle advertising account and its campaign tree.
+      properties:
+        id:
+          type: string
+          description: Account identifier.
+          example: '1'
+        name:
+          type: string
+          description: Account name.
+          example: Acme
+        account_state:
+          type: string
+          description: 'A: Active
+
+            I: Inactive, error with account
+
+            C: Cancelled
+
+            P: Paused
+
+            '
+          enum:
+          - A
+          - I
+          - C
+          - P
+        campaigns:
+          type: array
+          items:
+            $ref: '#/components/schemas/Campaign'
+    AccountsResponse:
+      type: object
+      description: Envelope carrying the array of account objects.
+      properties:
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+  parameters:
+    TokenHeader:
+      name: token
+      in: header
+      required: true
+      description: Authentication token generated from the /api/auth endpoint.
+      schema:
+        type: string
+  securitySchemes:
+    tokenHeader:
+      type: apiKey
+      in: header
+      name: token
+      description: 'Authentication token generated from the /api/auth endpoint. Valid for two hours from creation. Pass the token value as the `token` request header on every reporting call.
+
+        '
+externalDocs:
+  description: Choozle API Docs (apiDoc)
+  url: https://app.choozle.com/apidoc/
