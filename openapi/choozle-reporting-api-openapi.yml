@@ -158,59 +158,14 @@ paths:
                 error: Unauthorized - Request token is expired.
 components:
   schemas:
-    Error:
+    AccountsResponse:
       type: object
-      description: 'Choozle''s error envelope. A single `error` string; not RFC 9457 problem+json.
-
-        '
+      description: Envelope carrying the array of account objects.
       properties:
-        error:
-          type: string
-          example: Unauthorized - No Token Found in request
-    AdGroup:
-      type: object
-      description: An ad group within a campaign.
-      properties:
-        id:
-          type: string
-          example: '154'
-        name:
-          type: string
-          example: Ad Category
-        status:
-          type: string
-          description: 'I: Incomplete
-
-            U: Unapproved
-
-            E: Enabled
-
-            D: Disabled
-
-            S: Scheduled
-
-            W: Error
-
-            O: Over Ad Group''s Budget
-
-            B: Over Ad Group''s Daily Budget
-
-            C: Campaign Over Budget
-
-            A: Campaign Over Daily Budget
-
-            '
-          enum:
-          - I
-          - U
-          - E
-          - D
-          - S
-          - W
-          - O
-          - B
-          - C
-          - A
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
     ReportRow:
       type: object
       description: One day of performance for one ad group.
@@ -260,6 +215,15 @@ components:
           type: integer
         conversions:
           type: integer
+    Error:
+      type: object
+      description: 'Choozle''s error envelope. A single `error` string; not RFC 9457 problem+json.
+
+        '
+      properties:
+        error:
+          type: string
+          example: Unauthorized - No Token Found in request
     Campaign:
       type: object
       description: A campaign within an account.
@@ -286,6 +250,50 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AdGroup'
+    AdGroup:
+      type: object
+      description: An ad group within a campaign.
+      properties:
+        id:
+          type: string
+          example: '154'
+        name:
+          type: string
+          example: Ad Category
+        status:
+          type: string
+          description: 'I: Incomplete
+
+            U: Unapproved
+
+            E: Enabled
+
+            D: Disabled
+
+            S: Scheduled
+
+            W: Error
+
+            O: Over Ad Group''s Budget
+
+            B: Over Ad Group''s Daily Budget
+
+            C: Campaign Over Budget
+
+            A: Campaign Over Daily Budget
+
+            '
+          enum:
+          - I
+          - U
+          - E
+          - D
+          - S
+          - W
+          - O
+          - B
+          - C
+          - A
     Account:
       type: object
       description: A Choozle advertising account and its campaign tree.
@@ -318,14 +326,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Campaign'
-    AccountsResponse:
-      type: object
-      description: Envelope carrying the array of account objects.
-      properties:
-        accounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/Account'
   parameters:
     TokenHeader:
       name: token
