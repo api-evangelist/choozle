@@ -158,72 +158,38 @@ paths:
                 error: Unauthorized - Request token is expired.
 components:
   schemas:
-    AccountsResponse:
+    Account:
       type: object
-      description: Envelope carrying the array of account objects.
+      description: A Choozle advertising account and its campaign tree.
       properties:
-        accounts:
+        id:
+          type: string
+          description: Account identifier.
+          example: '1'
+        name:
+          type: string
+          description: Account name.
+          example: Acme
+        account_state:
+          type: string
+          description: 'A: Active
+
+            I: Inactive, error with account
+
+            C: Cancelled
+
+            P: Paused
+
+            '
+          enum:
+          - A
+          - I
+          - C
+          - P
+        campaigns:
           type: array
           items:
-            $ref: '#/components/schemas/Account'
-    ReportRow:
-      type: object
-      description: One day of performance for one ad group.
-      properties:
-        date:
-          type: string
-          format: date
-          example: '2014-12-02'
-        account_id:
-          type: string
-          example: '1'
-        account_name:
-          type: string
-          example: Acme
-        campaign_id:
-          type: string
-          example: '15'
-        campaign_name:
-          type: string
-          example: Campaign 1
-        ad_group_id:
-          type: string
-          example: '154'
-        ad_group_name:
-          type: string
-          example: Ad Group 1
-        advertiser_cost:
-          type: number
-          description: Advertiser cost for the day.
-        impressions_won:
-          type: integer
-          description: Impressions won.
-        win:
-          type: number
-          description: Win rate.
-        cpm:
-          type: number
-        cpc:
-          type: number
-        ctr:
-          type: number
-        cpa:
-          type: number
-        clicks:
-          type: integer
-        impressions_bid_on:
-          type: integer
-        conversions:
-          type: integer
-    Error:
-      type: object
-      description: 'Choozle''s error envelope. A single `error` string; not RFC 9457 problem+json.
-
-        '
-      properties:
-        error:
-          type: string
-          example: Unauthorized - No Token Found in request
+            $ref: '#/components/schemas/Campaign'
     Campaign:
       type: object
       description: A campaign within an account.
@@ -294,38 +260,72 @@ components:
           - B
           - C
           - A
-    Account:
+    Error:
       type: object
-      description: A Choozle advertising account and its campaign tree.
+      description: 'Choozle''s error envelope. A single `error` string; not RFC 9457 problem+json.
+
+        '
       properties:
-        id:
+        error:
           type: string
-          description: Account identifier.
-          example: '1'
-        name:
-          type: string
-          description: Account name.
-          example: Acme
-        account_state:
-          type: string
-          description: 'A: Active
-
-            I: Inactive, error with account
-
-            C: Cancelled
-
-            P: Paused
-
-            '
-          enum:
-          - A
-          - I
-          - C
-          - P
-        campaigns:
+          example: Unauthorized - No Token Found in request
+    AccountsResponse:
+      type: object
+      description: Envelope carrying the array of account objects.
+      properties:
+        accounts:
           type: array
           items:
-            $ref: '#/components/schemas/Campaign'
+            $ref: '#/components/schemas/Account'
+    ReportRow:
+      type: object
+      description: One day of performance for one ad group.
+      properties:
+        date:
+          type: string
+          format: date
+          example: '2014-12-02'
+        account_id:
+          type: string
+          example: '1'
+        account_name:
+          type: string
+          example: Acme
+        campaign_id:
+          type: string
+          example: '15'
+        campaign_name:
+          type: string
+          example: Campaign 1
+        ad_group_id:
+          type: string
+          example: '154'
+        ad_group_name:
+          type: string
+          example: Ad Group 1
+        advertiser_cost:
+          type: number
+          description: Advertiser cost for the day.
+        impressions_won:
+          type: integer
+          description: Impressions won.
+        win:
+          type: number
+          description: Win rate.
+        cpm:
+          type: number
+        cpc:
+          type: number
+        ctr:
+          type: number
+        cpa:
+          type: number
+        clicks:
+          type: integer
+        impressions_bid_on:
+          type: integer
+        conversions:
+          type: integer
   parameters:
     TokenHeader:
       name: token
