@@ -158,6 +158,40 @@ paths:
                 error: Unauthorized - Request token is expired.
 components:
   schemas:
+    AccountsResponse:
+      type: object
+      description: Envelope carrying the array of account objects.
+      properties:
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+    Campaign:
+      type: object
+      description: A campaign within an account.
+      properties:
+        id:
+          type: string
+          example: '15'
+        name:
+          type: string
+          example: June2014
+        start_date:
+          type: string
+          format: date
+          example: '2014-06-20'
+        end_date:
+          type: string
+          format: date
+          example: '2014-07-31'
+        archived:
+          type: string
+          description: Y when the campaign is archived, N otherwise.
+          example: N
+        ad_groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdGroup'
     Account:
       type: object
       description: A Choozle advertising account and its campaign tree.
@@ -190,32 +224,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Campaign'
-    Campaign:
-      type: object
-      description: A campaign within an account.
-      properties:
-        id:
-          type: string
-          example: '15'
-        name:
-          type: string
-          example: June2014
-        start_date:
-          type: string
-          format: date
-          example: '2014-06-20'
-        end_date:
-          type: string
-          format: date
-          example: '2014-07-31'
-        archived:
-          type: string
-          description: Y when the campaign is archived, N otherwise.
-          example: N
-        ad_groups:
-          type: array
-          items:
-            $ref: '#/components/schemas/AdGroup'
     AdGroup:
       type: object
       description: An ad group within a campaign.
@@ -260,23 +268,6 @@ components:
           - B
           - C
           - A
-    Error:
-      type: object
-      description: 'Choozle''s error envelope. A single `error` string; not RFC 9457 problem+json.
-
-        '
-      properties:
-        error:
-          type: string
-          example: Unauthorized - No Token Found in request
-    AccountsResponse:
-      type: object
-      description: Envelope carrying the array of account objects.
-      properties:
-        accounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/Account'
     ReportRow:
       type: object
       description: One day of performance for one ad group.
@@ -326,6 +317,15 @@ components:
           type: integer
         conversions:
           type: integer
+    Error:
+      type: object
+      description: 'Choozle''s error envelope. A single `error` string; not RFC 9457 problem+json.
+
+        '
+      properties:
+        error:
+          type: string
+          example: Unauthorized - No Token Found in request
   parameters:
     TokenHeader:
       name: token
