@@ -131,6 +131,9 @@ apis:
   - type: Examples
     url: examples/get-reports.json
 common:
+  - type: CapabilityMap
+    url: capabilities/choozle-capability-edges.yml
+    name: Choozle Business Capability Map
   - type: Overlay
     url: overlays/choozle-accounts-api-overlay.yaml
   - type: Overlay

@@ -1,0 +1,26 @@
+slug: choozle
+provider: Choozle
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 1
+edges:
+- tag: Reporting
+  spec_file: choozle-reporting-api-openapi.yml
+  capability_id: BC-400.60
+  capability_id_l1: BC-400
+  capability_name: Digital Marketing Management
+  confidence: 0.75
+  evidence: REST API for retrieving Choozle advertising account structure (accounts, campaigns, ad groups)
+    and daily campaign performance reports
+  reason: Operations return programmatic advertising campaign structure and daily performance reports
+    from a DSP — digital/paid-media marketing performance reporting. Maps to Digital Marketing Management;
+    some ambiguity with Marketing Operations measurement.
