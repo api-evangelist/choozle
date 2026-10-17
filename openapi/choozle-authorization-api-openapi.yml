@@ -52,6 +52,15 @@ paths:
                 error: Request incomplete
 components:
   schemas:
+    Error:
+      type: object
+      description: 'Choozle''s error envelope. A single `error` string; not RFC 9457 problem+json.
+
+        '
+      properties:
+        error:
+          type: string
+          example: Unauthorized - No Token Found in request
     AuthorizationRequest:
       type: object
       description: HMAC-signed credentials exchanged for a two-hour API token.
@@ -78,15 +87,6 @@ components:
 
             '
           example: REDACTED_EXAMPLE_SIGNATURE_HEX
-    Error:
-      type: object
-      description: 'Choozle''s error envelope. A single `error` string; not RFC 9457 problem+json.
-
-        '
-      properties:
-        error:
-          type: string
-          example: Unauthorized - No Token Found in request
     AuthorizationToken:
       type: object
       description: Token returned after successful authentication.

@@ -158,14 +158,108 @@ paths:
                 error: Unauthorized - Request token is expired.
 components:
   schemas:
-    AccountsResponse:
+    AdGroup:
       type: object
-      description: Envelope carrying the array of account objects.
+      description: An ad group within a campaign.
       properties:
-        accounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/Account'
+        id:
+          type: string
+          example: '154'
+        name:
+          type: string
+          example: Ad Category
+        status:
+          type: string
+          description: 'I: Incomplete
+
+            U: Unapproved
+
+            E: Enabled
+
+            D: Disabled
+
+            S: Scheduled
+
+            W: Error
+
+            O: Over Ad Group''s Budget
+
+            B: Over Ad Group''s Daily Budget
+
+            C: Campaign Over Budget
+
+            A: Campaign Over Daily Budget
+
+            '
+          enum:
+          - I
+          - U
+          - E
+          - D
+          - S
+          - W
+          - O
+          - B
+          - C
+          - A
+    Error:
+      type: object
+      description: 'Choozle''s error envelope. A single `error` string; not RFC 9457 problem+json.
+
+        '
+      properties:
+        error:
+          type: string
+          example: Unauthorized - No Token Found in request
+    ReportRow:
+      type: object
+      description: One day of performance for one ad group.
+      properties:
+        date:
+          type: string
+          format: date
+          example: '2014-12-02'
+        account_id:
+          type: string
+          example: '1'
+        account_name:
+          type: string
+          example: Acme
+        campaign_id:
+          type: string
+          example: '15'
+        campaign_name:
+          type: string
+          example: Campaign 1
+        ad_group_id:
+          type: string
+          example: '154'
+        ad_group_name:
+          type: string
+          example: Ad Group 1
+        advertiser_cost:
+          type: number
+          description: Advertiser cost for the day.
+        impressions_won:
+          type: integer
+          description: Impressions won.
+        win:
+          type: number
+          description: Win rate.
+        cpm:
+          type: number
+        cpc:
+          type: number
+        ctr:
+          type: number
+        cpa:
+          type: number
+        clicks:
+          type: integer
+        impressions_bid_on:
+          type: integer
+        conversions:
+          type: integer
     Campaign:
       type: object
       description: A campaign within an account.
@@ -224,108 +318,14 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Campaign'
-    AdGroup:
+    AccountsResponse:
       type: object
-      description: An ad group within a campaign.
+      description: Envelope carrying the array of account objects.
       properties:
-        id:
-          type: string
-          example: '154'
-        name:
-          type: string
-          example: Ad Category
-        status:
-          type: string
-          description: 'I: Incomplete
-
-            U: Unapproved
-
-            E: Enabled
-
-            D: Disabled
-
-            S: Scheduled
-
-            W: Error
-
-            O: Over Ad Group''s Budget
-
-            B: Over Ad Group''s Daily Budget
-
-            C: Campaign Over Budget
-
-            A: Campaign Over Daily Budget
-
-            '
-          enum:
-          - I
-          - U
-          - E
-          - D
-          - S
-          - W
-          - O
-          - B
-          - C
-          - A
-    ReportRow:
-      type: object
-      description: One day of performance for one ad group.
-      properties:
-        date:
-          type: string
-          format: date
-          example: '2014-12-02'
-        account_id:
-          type: string
-          example: '1'
-        account_name:
-          type: string
-          example: Acme
-        campaign_id:
-          type: string
-          example: '15'
-        campaign_name:
-          type: string
-          example: Campaign 1
-        ad_group_id:
-          type: string
-          example: '154'
-        ad_group_name:
-          type: string
-          example: Ad Group 1
-        advertiser_cost:
-          type: number
-          description: Advertiser cost for the day.
-        impressions_won:
-          type: integer
-          description: Impressions won.
-        win:
-          type: number
-          description: Win rate.
-        cpm:
-          type: number
-        cpc:
-          type: number
-        ctr:
-          type: number
-        cpa:
-          type: number
-        clicks:
-          type: integer
-        impressions_bid_on:
-          type: integer
-        conversions:
-          type: integer
-    Error:
-      type: object
-      description: 'Choozle''s error envelope. A single `error` string; not RFC 9457 problem+json.
-
-        '
-      properties:
-        error:
-          type: string
-          example: Unauthorized - No Token Found in request
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
   parameters:
     TokenHeader:
       name: token
